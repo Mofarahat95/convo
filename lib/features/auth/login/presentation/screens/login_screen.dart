@@ -4,6 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:convo/features/auth/firebase/firebase_mang.dart';
 
+class LoginScreenConstants {
+  static const double borderRadius = 40.0;
+  static const double padding = 20.0;
+  static const Color primaryColor = Color(0xff6D6A6A);
+  static const TextStyle headerStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
+}
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -12,137 +23,148 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isPasswordVisible = false; // للتحكم في عرض/إخفاء كلمة المرور
-  bool _stayLoggedIn = false; // حالة checkbox
+  final _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
+  bool _stayLoggedIn = false;
+  bool _isLoading = false;
   String selectedLanguage = '';
 
-  // Controllers لإدارة الحقول
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // تنظيف الـ Controllers عند إغلاق الصفحة
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  void _handleRegisterNavigation() {
+  }
+
+  Widget _buildSocialLoginButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 70),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _socialLoginButton("assets/images/apple.png", () {}),
+          _socialLoginButton("assets/images/google.png", () {}),
+          _socialLoginButton("assets/images/facebook.png", () {}),
+        ],
+      ),
+    );
+  }
+
+  Widget _socialLoginButton(String asset, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(asset),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          // جزء "Login Account" بخلفية سوداء
           Container(
             color: Colors.black,
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     const Text(
                       "Login Account",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20, // تكبير الخط قليلاً
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: LoginScreenConstants.headerStyle,
                     ),
-                    Image.asset(
-                      'assets/images/User.png',
-                      width: 40,
-                    ),
-                    const Spacer(
-                      flex: 1,
-                    ),
-                    Image.asset(
-                      'assets/images/egypt.png',
-                      width: 30,
-                    ),
+                    Image.asset('assets/images/User.png', width: 40),
+                    const Spacer(),
+                    Image.asset('assets/images/egypt.png', width: 30),
                     PopupMenuButton<String>(
-                        onSelected: (value) {
-                          setState(() {
-                            selectedLanguage =
-                                value; // تغيير اللغة عند الاختيار
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white, // لون الأيقونة
-                          size: 30, // حجم الأيقونة
+                      onSelected: (value) {
+                        setState(() => selectedLanguage = value);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'English',
+                          child: Text('English'),
                         ),
-                        itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 'English',
-                                child: Text('English'),
-                              ),
-                              PopupMenuItem(
-                                value: 'Arabic',
-                                child: Text('العربية'),
-                              ),
-                            ])
+                        const PopupMenuItem(
+                          value: 'Arabic',
+                          child: Text('العربية'),
+                        ),
+                      ],
+                    )
                   ],
                 ),
                 const Text(
                   "Welcome back To Application",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13, // تكبير النص قليلاً
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Center(
-                  child: Text("Login",
-                      style: GoogleFonts.quicksand(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 35,
-                      )),
+                  child: Text(
+                    "Login",
+                    style: GoogleFonts.quicksand(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-
-          // باقي الصفحة بخلفية بيضاء
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(40),
-                    topLeft: Radius.circular(40)),
+                  topRight: Radius.circular(LoginScreenConstants.borderRadius),
+                  topLeft: Radius.circular(LoginScreenConstants.borderRadius),
+                ),
                 color: Colors.white,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
+              padding: const EdgeInsets.symmetric(
+                horizontal: LoginScreenConstants.padding,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-
-                    // حقل البريد الإلكتروني
-                    TextField(
-                      controller: _emailController, // ربط الـ Controller
-                      style:
-                          TextStyle(color: Colors.black), // النص باللون الأسود
-                      decoration: InputDecoration(
+                    TextFormField(
+                      controller: _emailController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
                         labelText: "Email",
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18, // تكبير النص الوصفي
-                        ),
+                        labelStyle: TextStyle(color: Colors.grey, fontSize: 18),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
-
-                    // حقل كلمة المرور مع زر عرض كلمة المرور
-                    TextField(
-                      controller: _passwordController, // ربط الـ Controller
-                      obscureText: !_isPasswordVisible, // إظهار/إخفاء النص
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: !_isPasswordVisible,
                       style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -164,10 +186,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
-
-                    // Checkbox "Stay logged in?" وخيار "Forgot Password"
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -176,9 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Checkbox(
                               value: _stayLoggedIn,
                               onChanged: (value) {
-                                setState(() {
-                                  _stayLoggedIn = value ?? false;
-                                });
+                                setState(() => _stayLoggedIn = value ?? false);
                               },
                             ),
                             const Text(
@@ -197,63 +224,69 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    // زر تسجيل الدخول
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          firbaseeMang.login(
-                              _emailController.text, _passwordController.text,
-                              () {
-                            GoRouter.of(context)
-                                .pushReplacement(AppRoutes.homeRoute);
-                          }, (message) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(message),
-                                      actions: [
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              GoRouter.of(context).pop();
-                                            },
-                                            child: Text("Okay"))
-                                      ],
-                                    ));
-                          });
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() => _isLoading = true);
+                                  await firbaseeMang.login(
+                                    _emailController.text,
+                                    _passwordController.text,
+                                    () {
+                                      GoRouter.of(context)
+                                          .pushReplacement(AppRoutes.homeRoute);
+                                    },
+                                    (message) {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Error"),
+                                          content: Text(message),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                GoRouter.of(context).pop();
+                                              },
+                                              child: const Text("Okay"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                  setState(() => _isLoading = false);
+                                }
+                              },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff6D6A6A),
+                          backgroundColor: LoginScreenConstants.primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(50), // حواف أقل استدارة
+                            borderRadius: BorderRadius.circular(50),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18, // تكبير النص قليلاً
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 15),
-
-                    // رابط التسجيل
                     Center(
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: _handleRegisterNavigation,
                         child: RichText(
                           text: TextSpan(
                             text: "Don't have an account yet? Register",
-                            style: GoogleFonts.quicksand(
-                              color: Colors.black,
-                            ),
+                            style: GoogleFonts.quicksand(color: Colors.black),
                             children: const [
                               TextSpan(
                                 text: " here",
@@ -274,43 +307,39 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Divider(
                             endIndent: 5,
                             indent: 10,
-                            color: Colors.grey, // لون الخط
-                            thickness: 1, // سماكة الخط
+                            color: Colors.grey,
+                            thickness: 1,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 20),
-                          child: Text('Or login with',
-                              style: GoogleFonts.quicksand(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 12,
-                              )),
+                            horizontal: 10.0,
+                            vertical: 20,
+                          ),
+                          child: Text(
+                            'Or login with',
+                            style: GoogleFonts.quicksand(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                         const Expanded(
                           child: Divider(
                             endIndent: 5,
                             indent: 10,
-                            color: Colors.grey, // لون الخط
-                            thickness: 1, // سماكة الخط
+                            color: Colors.grey,
+                            thickness: 1,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 70),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Image.asset("assets/images/apple.png"),
-                          Image.asset("assets/images/google.png"),
-                          Image.asset("assets/images/facebook.png"),
-                        ],
-                      ),
-                    ),
-                  ]),
+                    _buildSocialLoginButtons(),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
