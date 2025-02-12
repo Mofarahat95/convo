@@ -26,9 +26,8 @@ class firbaseeMang {
           .signInWithEmailAndPassword(email: email, password: password);
       onSuccess();
     } on FirebaseAuthException catch (e) {
-      if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-        onError("Wrong Mail Or Password");
+        onError(e.message);
       }
     }
   }
-}
+

@@ -244,14 +244,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => AlertDialog(
-                                          title: const Text("Error"),
+                                          title: Text("Error"),
                                           content: Text(message),
                                           actions: [
                                             ElevatedButton(
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child: const Text("Okay"),
+                                              child:  Text("Okay"),
                                             ),
                                           ],
                                         ),
