@@ -207,7 +207,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               _emailController.text, _passwordController.text,
                               () {
                                 GoRouter.of(context).pushReplacement (AppRoutes.Home);
-                          }, (message) {
+                          },
+                                  (message) {
                             showDialog(
                                 context: context,
                                 barrierDismissible: false,
