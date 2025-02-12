@@ -1,5 +1,8 @@
+import 'package:convo/config/routes_manager/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:convo/features/auth/firebase/firebase_mang.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +15,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false; // للتحكم في عرض/إخفاء كلمة المرور
   bool _stayLoggedIn = false; // حالة checkbox
   String selectedLanguage = '';
+
+  // Controllers لإدارة الحقول
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
+  void dispose() {
+    // تنظيف الـ Controllers عند إغلاق الصفحة
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -26,7 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 Row(
                   children: [
                     const Text(
@@ -108,7 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     // حقل البريد الإلكتروني
-                    const TextField(
+                    TextField(
+                      controller: _emailController, // ربط الـ Controller
                       style:
                           TextStyle(color: Colors.black), // النص باللون الأسود
                       decoration: InputDecoration(
@@ -123,6 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // حقل كلمة المرور مع زر عرض كلمة المرور
                     TextField(
+                      controller: _passwordController, // ربط الـ Controller
                       obscureText: !_isPasswordVisible, // إظهار/إخفاء النص
                       style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
@@ -183,7 +202,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          firbaseeMang.login(
+                              _emailController.text, _passwordController.text,
+                              () {
+                                GoRouter.of(context).pushReplacement (AppRoutes.Home);
+                          }, (message) {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(message),
+                                      actions: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("Okay"))
+                                      ],
+                                    ));
+                          });
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff6D6A6A),
                           shape: RoundedRectangleBorder(

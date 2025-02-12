@@ -10,7 +10,10 @@ abstract class RoutesManager {
         path: AppRoutes.loginRoute,
         builder: (context, state) =>LoginScreen() ,
       ),
-
+      GoRoute(
+        path: AppRoutes.Home,
+        builder: (context, state) =>LoginScreen() ,
+      ),
     ],
   );
 }
