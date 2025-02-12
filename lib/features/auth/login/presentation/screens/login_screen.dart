@@ -206,9 +206,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           firbaseeMang.login(
                               _emailController.text, _passwordController.text,
                               () {
-                                GoRouter.of(context).pushReplacement (AppRoutes.Home);
-                          },
-                                  (message) {
+                            GoRouter.of(context)
+                                .pushReplacement(AppRoutes.homeRoute);
+                          }, (message) {
                             showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -218,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       actions: [
                                         ElevatedButton(
                                             onPressed: () {
-                                              Navigator.pop(context);
+                                              GoRouter.of(context).pop();
                                             },
                                             child: Text("Okay"))
                                       ],
