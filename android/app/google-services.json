@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "683394346538",
+    "project_id": "gr-project-d3e7d",
+    "storage_bucket": "gr-project-d3e7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683394346538:android:18929211f1ed8ecabb9d53",
+        "android_client_info": {
+          "package_name": "com.example.convo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT1_nwGkrxBTzUoJ7nWq7RfZ4PSO10L6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

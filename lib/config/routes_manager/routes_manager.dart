@@ -1,6 +1,7 @@
 
 import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
+import 'package:convo/features/home/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class RoutesManager {
@@ -10,7 +11,10 @@ abstract class RoutesManager {
         path: AppRoutes.loginRoute,
         builder: (context, state) =>LoginScreen() ,
       ),
-
+      GoRoute(
+        path: AppRoutes.homeRoute,
+        builder: (context, state) =>HomeScreen() ,
+      ),
     ],
   );
 }
