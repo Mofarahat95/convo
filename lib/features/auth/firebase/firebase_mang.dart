@@ -1,7 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:convo/config/routes_manager/routes.dart';
+import 'package:go_router/go_router.dart';
 
 class firbaseeMang {
+ // static get context => null;
+
   static Future<void> createAccount(String email, String password) async {
     try {
       final credential =
@@ -32,8 +38,9 @@ class firbaseeMang {
   }
 
   // Google Sign In
-  static Future<UserCredential> signInWithGoogle() async {
+  static Future<UserCredential> signInWithGoogle(BuildContext context) async {
     try {
+      await GoogleSignIn().signOut();
       // Begin interactive sign-in process
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -50,9 +57,19 @@ class firbaseeMang {
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-
       // Finally, let's sign in
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Navigate to Home screen after successful login
+      if (userCredential.user != null) {
+        GoRouter.of( context).pushReplacement(AppRoutes.homeRoute);
+        //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AppRoutes.homeRoute), // تأكد من تغيير HomePage إلى اسم الشاشة الرئيسية لديك;
+      }
+
+      return userCredential;
+      // Finally, let's sign in
+      //return await FirebaseAuth.instance.signInWithCredential(credential);
+
     } catch (e) {
       // Handle any errors that occur during sign-in
       print('Error during Google Sign-In: $e');

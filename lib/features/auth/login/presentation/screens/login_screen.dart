@@ -337,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    SquareTite(imagePath: "assets/images/google.png", onTap: ()=>firbaseeMang.signInWithGoogle())
+                    SquareTite(imagePath: "assets/images/google.png", onTap: ()=>firbaseeMang.signInWithGoogle(context))
                   ],
                 ),
               ),
