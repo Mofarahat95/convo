@@ -5,7 +5,7 @@ class firbaseeMang {
   static Future<void> createAccount(String email, String password) async {
     try {
       final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -32,17 +32,31 @@ class firbaseeMang {
   }
 
   // Google Sign In
-  signInWithGoogle() async {
-// begin interactive sign in process
-final GoogleSignInAccount? gUser= await GoogleSignIn().signIn();
-// obtaiin auth details from request
-final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+  static Future<UserCredential> signInWithGoogle() async {
+    try {
+      // Begin interactive sign-in process
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-// create a new credential for user
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken, idToken: gAuth.idToken,);
-// finally, lets sign in
+      // Check if the user canceled the sign-in process
+      if (gUser == null) {
+        throw Exception("Sign-in aborted by user");
+      }
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Obtain auth details from request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+      // Create a new credential for the user
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+
+      // Finally, let's sign in
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      // Handle any errors that occur during sign-in
+      print('Error during Google Sign-In: $e');
+      rethrow;
+    }
   }
 }
