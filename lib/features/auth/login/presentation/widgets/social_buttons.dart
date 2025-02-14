@@ -1,3 +1,4 @@
+import 'package:convo/features/auth/firebase/firebase_mang.dart';
 import 'package:flutter/material.dart';
 
 Widget buildSocialLoginButtons() {
@@ -8,7 +9,9 @@ Widget buildSocialLoginButtons() {
       children: [
         socialLoginButton("assets/images/apple.png", () {}),
         socialLoginButton("assets/images/google.png", () {}),
-        socialLoginButton("assets/images/facebook.png", () {}),
+        socialLoginButton("assets/images/facebook.png", () {
+          FirebaseManager.signInWithFacebook();
+        }),
       ],
     ),
   );
