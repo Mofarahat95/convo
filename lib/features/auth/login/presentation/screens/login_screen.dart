@@ -1,5 +1,6 @@
 import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/widgets/social_buttons.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,14 +221,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => AlertDialog(
-                                          title: const Text("Error"),
+                                          title: Text("Error"),
                                           content: Text(message),
                                           actions: [
                                             ElevatedButton(
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child: const Text("Okay"),
+                                              child:  Text("Okay"),
                                             ),
                                           ],
                                         ),
@@ -316,7 +316,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
+
                     buildSocialLoginButtons(),
+
                   ],
                 ),
               ),

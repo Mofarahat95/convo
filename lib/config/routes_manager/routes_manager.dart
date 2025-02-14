@@ -12,8 +12,8 @@ abstract class RoutesManager {
         builder: (context, state) =>LoginScreen() ,
       ),
       GoRoute(
-        path: AppRoutes.homeRoute,
-        builder: (context, state) =>HomeScreen() ,
+        path: AppRoutes.Home,
+        builder: (context, state) =>HomeScreen) ,
       ),
       GoRoute(
         path: AppRoutes.signUpRoute,
