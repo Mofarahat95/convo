@@ -1,4 +1,6 @@
 import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/features/auth/login/presentation/widgets/social_buttons.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,31 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-
-  void _handleRegisterNavigation() {
-  }
-
-  Widget _buildSocialLoginButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 70),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _socialLoginButton("assets/images/apple.png", () {}),
-          _socialLoginButton("assets/images/google.png", () {}),
-          _socialLoginButton("assets/images/facebook.png", () {}),
-        ],
-      ),
-    );
-  }
-
-  Widget _socialLoginButton(String asset, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Image.asset(asset),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -232,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () async {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() => _isLoading = true);
-                                  await firbaseeMang.login(
+                                  await FirebaseManager.login(
                                     _emailController.text,
                                     _passwordController.text,
                                     () {
@@ -244,14 +221,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => AlertDialog(
-                                          title: const Text("Error"),
+                                          title: Text("Error"),
                                           content: Text(message),
                                           actions: [
                                             ElevatedButton(
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child: const Text("Okay"),
+                                              child:  Text("Okay"),
                                             ),
                                           ],
                                         ),
@@ -269,7 +246,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
                             : const Text(
                                 "Login",
                                 style: TextStyle(
@@ -282,7 +260,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 15),
                     Center(
                       child: GestureDetector(
-                        onTap: _handleRegisterNavigation,
+                        onTap: () {
+                          GoRouter.of(context).push(AppRoutes.signUpRoute);
+                        },
                         child: RichText(
                           text: TextSpan(
                             text: "Don't have an account yet? Register",
@@ -336,7 +316,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    _buildSocialLoginButtons(),
+
+                    buildSocialLoginButtons(),
+
                   ],
                 ),
               ),
