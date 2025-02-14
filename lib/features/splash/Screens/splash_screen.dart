@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(const ChatApp());
-}
+import '../../../config/routes_manager/routes.dart';
 
-class ChatApp extends StatelessWidget {
-  const ChatApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const WelcomeScreen(),
-    );
-  }
-}
-
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,32 +16,24 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           // صورة الهاتف مع الرسائل
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            padding: const EdgeInsets.only(top:  30, ),
             child: Image.asset(
-              'images/illustration_Chat_.jpg', // تأكد من وجود الصورة في assets
-              height: 250,
+              'assets/images/Chat.png', // تأكد من وجود الصورة في assets
+              height: 300,
+
             ),
           ),
 
           // الشعار
           Image.asset(
-            'assets/convo_logo.png', // تأكد من وضع اللوجو الصحيح في assets
-            height: 50,
+            'assets/images/logo.png', // تأكد من وضع اللوجو الصحيح في assets
+            height: 200,
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 2),
 
           // اسم التطبيق
-          const Text(
-            "CONVO",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
 
-          const SizedBox(height: 10),
 
           // العنوان الرئيسي
           const Text(
@@ -84,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
 
           // أزرار تسجيل الدخول والتسجيل
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -103,7 +83,10 @@ class WelcomeScreen extends StatelessWidget {
                       ],
                     ),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GoRouter.of(context).push(AppRoutes.loginRoute);
+
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
@@ -123,11 +106,13 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(width: 20),
+                const SizedBox(width: 30),
 
                 // زر التسجيل
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    GoRouter.of(context).push(AppRoutes.signUpRoute);
+                  },
                   child: const Text(
                     "Register",
                     style: TextStyle(
@@ -140,6 +125,7 @@ class WelcomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 40,),
         ],
       ),
     );
