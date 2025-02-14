@@ -24,7 +24,11 @@ class firbaseeMang {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      onSuccess();
+      if (credential.user!.emailVerified) {
+        onSuccess();
+      } else {
+        onError("verify your mail");
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == "INVALID_LOGIN_CREDENTIALS") {
         onError("Wrong Mail Or Password");
