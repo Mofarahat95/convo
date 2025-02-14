@@ -9,19 +9,18 @@ class SquareTite extends StatelessWidget {
     required this.imagePath,
     required this.onTap,
   });
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 70),
+        padding: const EdgeInsets.symmetric(horizontal: 10), // تقليل المسافة الجانبية
         child: Image.asset(
           imagePath,
-
-          height: 50,
+          height: 60,  // تعديل الارتفاع حسب الحاجة
+          width: 50,   // تحديد عرض ثابت
+          fit: BoxFit.contain, // لضمان تناسب الصورة مع الحاوية
         ),
       ),
     );
-  }
-}
+  }}
