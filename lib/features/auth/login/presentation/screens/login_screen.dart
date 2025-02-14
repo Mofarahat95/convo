@@ -1,4 +1,5 @@
 import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/features/auth/components/social_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _socialLoginButton("assets/images/apple.png", () {}),
+          _socialLoginButton("assets/images/apple.png", (){}),
           _socialLoginButton("assets/images/google.png", () {}),
           _socialLoginButton("assets/images/facebook.png", () {}),
         ],
@@ -244,14 +245,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (context) => AlertDialog(
-                                          title: const Text("Error"),
+                                          title: Text("Error"),
                                           content: Text(message),
                                           actions: [
                                             ElevatedButton(
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child: const Text("Okay"),
+                                              child:  Text("Okay"),
                                             ),
                                           ],
                                         ),
@@ -336,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    _buildSocialLoginButtons(),
+                    SquareTite(imagePath: "assets/images/google.png", onTap: ()=>firbaseeMang.signInWithGoogle(context))
                   ],
                 ),
               ),
