@@ -1,30 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convo/features/auth/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:convo/config/routes_manager/routes.dart';
-import 'package:go_router/go_router.dart';
 
-class firbaseeMang {
- // static get context => null;
-
-  static Future<void> createAccount(String email, String password) async {
-    try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+class FirebaseManager {
 
   static Future<void> login(String email, String password, Function onSuccess,
       Function onError) async {
@@ -33,47 +11,57 @@ class firbaseeMang {
           .signInWithEmailAndPassword(email: email, password: password);
       onSuccess();
     } on FirebaseAuthException catch (e) {
-      onError(e.message);
+      if (e.code == "INVALID_LOGIN_CREDENTIALS") {
+        onError("Wrong Mail Or Password");
+      }
     }
   }
 
-  // Google Sign In
-  static Future<UserCredential> signInWithGoogle(BuildContext context) async {
+  static Future<void> creatAccount(String name, String phone, String email,
+      String password, Function onSuccess, Function onError) async {
     try {
-      await GoogleSignIn().signOut();
-      // Begin interactive sign-in process
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-
-      // Check if the user canceled the sign-in process
-      if (gUser == null) {
-        throw Exception("Sign-in aborted by user");
-      }
-
-      // Obtain auth details from request
-      final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
-      // Create a new credential for the user
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      // Finally, let's sign in
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // Navigate to Home screen after successful login
-      if (userCredential.user != null) {
-        GoRouter.of( context).pushReplacement(AppRoutes.homeRoute);
-        //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AppRoutes.homeRoute), // تأكد من تغيير HomePage إلى اسم الشاشة الرئيسية لديك;
+      UserModel userModel = UserModel(
+          email: email, id: credential.user!.uid, name: name, phone: phone);
+      credential.user?.sendEmailVerification();
+      FirebaseAuth.instance.sendPasswordResetEmail(
+        email: "email",
+      ); //forget password
+      addUserToFireStore(userModel);
+      onSuccess();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        onError(e.message);
+      } else if (e.code == 'email-already-in-use') {
+        onError(e.message);
       }
-
-      return userCredential;
-      // Finally, let's sign in
-      //return await FirebaseAuth.instance.signInWithCredential(credential);
-
     } catch (e) {
-      // Handle any errors that occur during sign-in
-      print('Error during Google Sign-In: $e');
-      rethrow;
+      print(e);
     }
+  }
+
+  // get user
+  static CollectionReference<UserModel> getusercollection() {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .withConverter<UserModel>(
+      fromFirestore: (snapshot, _) {
+        return UserModel.formJson(snapshot.data()!);
+      },
+      toFirestore: (user, _) {
+        return user.toJson();
+      },
+    );
+  }
+
+  static Future<void> addUserToFireStore(UserModel user) async {
+    var collection = getusercollection();
+    var docRef=collection.doc();
+    user.id = docRef.id;
+    docRef.set(user);
   }
 }
