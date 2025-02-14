@@ -2,6 +2,7 @@ import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
 import 'package:convo/features/auth/signup/presentation/screens/signup_screen.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
+import 'package:convo/features/splash/Screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class RoutesManager {
@@ -9,19 +10,19 @@ abstract class RoutesManager {
     routes: <RouteBase>[
       GoRoute(
         path: AppRoutes.loginRoute,
-        builder: (context, state) =>LoginScreen() ,
+        builder: (context, state) => LoginScreen(),
       ),
       GoRoute(
-        path: AppRoutes.Home,
-        builder: (context, state) =>HomeScreen) ,
-      ),
-      GoRoute(
-        path: AppRoutes.signUpRoute,
-        builder: (context, state) =>SignUpScreen() ,
+        path: AppRoutes.homeRoute,
+        builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
         path: AppRoutes.signUpRoute,
-        builder: (context, state) =>SignUpScreen() ,
+        builder: (context, state) => SignUpScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.splashRoute,
+        builder: (context, state) => SplashScreen(),
       ),
     ],
   );

@@ -5,15 +5,15 @@ class buildTextField extends StatelessWidget {
       {required this.controller,
       required this.label,
       required this.hintText,
-      keyboardType = TextInputType.text,
-      obscureText = false,
+      this.keyboardType = TextInputType.text,
+      this.obscureText = false,
       super.key});
 
   TextEditingController controller = TextEditingController();
   final String label;
   final String hintText;
-  final bool obscureText = false;
-  final TextInputType keyboardType = TextInputType.text;
+   bool obscureText = false;
+   TextInputType keyboardType = TextInputType.text;
 
   @override
   Widget build(BuildContext context) {
