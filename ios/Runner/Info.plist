@@ -6,6 +6,23 @@
 <key>CFBundleURLTypes</key>
 <array>
 	<dict>
+
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+  <key>CFBundleURLSchemes</key>
+  <array>
+    <string>fb971341268265294</string>
+  </array>
+  </dict>
+</array>
+<key>FacebookAppID</key>
+<string>971341268265294</string>
+<key>FacebookClientToken</key>
+<string>CLIENT-TOKEN</string>
+<key>FacebookDisplayName</key>
+<string>convo</string>
+
 		<key>CFBundleTypeRole</key>
 		<string>Editor</string>
 		<key>CFBundleURLSchemes</key>
