@@ -18,6 +18,7 @@ class SquareTite extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 70),
         child: Image.asset(
           imagePath,
+
           height: 50,
         ),
       ),
