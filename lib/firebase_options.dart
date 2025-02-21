@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCT1_nwGkrxBTzUoJ7nWq7RfZ4PSO10L6U',
-    appId: '1:683394346538:android:18929211f1ed8ecabb9d53',
-    messagingSenderId: '683394346538',
-    projectId: 'gr-project-d3e7d',
-    storageBucket: 'gr-project-d3e7d.firebasestorage.app',
+    apiKey: 'AIzaSyARBMhWAJWPHMxvFHZmqt_O-t4MO7Uu4Bc',
+    appId: '1:1025056151848:android:6a4b8b4ece6e4749d5981d',
+    messagingSenderId: '1025056151848',
+    projectId: 'convo-2b935',
+    storageBucket: 'convo-2b935.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAevP-iGGbfAxv2NGpPrNeR0SyfDAj5NMs',
-    appId: '1:683394346538:ios:274794920f0a07dcbb9d53',
-    messagingSenderId: '683394346538',
-    projectId: 'gr-project-d3e7d',
-    storageBucket: 'gr-project-d3e7d.firebasestorage.app',
+    apiKey: 'AIzaSyDtSY4qUsuLk7ziQl5rniayua50XNGuj4s',
+    appId: '1:1025056151848:ios:34ff9cde3d15ccf8d5981d',
+    messagingSenderId: '1025056151848',
+    projectId: 'convo-2b935',
+    storageBucket: 'convo-2b935.firebasestorage.app',
     iosBundleId: 'com.example.convo',
   );
 
