@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:convo/features/auth/firebase/firebase_mang.dart';
 
+import '../../../../Reset_pass/screens/Reset_pass.dart';
+
 class LoginScreenConstants {
   static const double borderRadius = 40.0;
   static const double padding = 20.0;
@@ -40,8 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleRegisterNavigation() {
-  }
+  void _handleRegisterNavigation() {}
 
   Widget _buildSocialLoginButtons() {
     return Padding(
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _socialLoginButton("assets/images/apple.png", (){}),
+          _socialLoginButton("assets/images/apple.png", () {}),
           _socialLoginButton("assets/images/google.png", () {}),
           _socialLoginButton("assets/images/facebook.png", () {}),
         ],
@@ -216,7 +217,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return ResetPasswordScreen();
+                              }),
+                            );
+                          },
                           child: const Text(
                             "Forgot Password?",
                             style: TextStyle(color: Colors.grey),
@@ -233,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () async {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() => _isLoading = true);
-                                  await firbaseeMang.login(
+                                  await FirebaseManager.login(
                                     _emailController.text,
                                     _passwordController.text,
                                     () {
@@ -252,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child:  Text("Okay"),
+                                              child: Text("Okay"),
                                             ),
                                           ],
                                         ),
@@ -270,7 +278,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(
+                                color: Colors.white)
                             : const Text(
                                 "Login",
                                 style: TextStyle(
@@ -283,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 15),
                     Center(
                       child: GestureDetector(
-                        onTap: _handleRegisterNavigation,
+                        onTap: (){ () => GoRouter.of(context).pushReplacement(AppRoutes.signUpRoute);},
                         child: RichText(
                           text: TextSpan(
                             text: "Don't have an account yet? Register",
@@ -337,7 +346,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    SquareTite(imagePath: "assets/images/google.png", onTap: ()=>firbaseeMang.signInWithGoogle(context))
+                    SquareTite(
+                        imagePath: "assets/images/google.png",
+                        onTap: () => FirebaseManager.signInWithGoogle(context))
                   ],
                 ),
               ),

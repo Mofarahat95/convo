@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../config/routes_manager/routes.dart';
+import '../../Reset_pass/screens/Reset_pass.dart';
 class SuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -71,7 +75,12 @@ class SuccessScreen extends StatelessWidget {
                 const  SizedBox(height: 40),
                 GestureDetector(
                   onTap: () {
-                    print("Resubmit clicked");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return ResetPasswordScreen();
+                      }),
+                    );
                   },
                   child: RichText(
                     text: TextSpan(
@@ -95,7 +104,8 @@ class SuccessScreen extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                          GoRouter.of(context).pushReplacement(AppRoutes.loginRoute);
+                      //Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:Color(0xff6D6A6A),

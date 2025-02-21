@@ -1,8 +1,91 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-class ResetPasswordScreen extends StatelessWidget {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../Success_screen/Screens/SuccessScreen.dart';
+
+class ResetPasswordScreen extends StatefulWidget {
   ResetPasswordScreen({super.key});
 
+  @override
+  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  Future passwordReset(BuildContext context) async {
+    // تحقق ما إذا كان البريد الإلكتروني موجودًا في Firestore
+    bool emailExists = await checkIfEmailExists(emailController.text.trim());  // تعديل هنا
+
+    if (!emailExists) {
+      // عرض رسالة توضح أن البريد الإلكتروني غير موجود
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              title: Text("Error"),
+              content: Text("Email does not exist in the app."),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Okay"),
+                ),
+              ],
+            ),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return SuccessScreen();
+        }),
+      );
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text(e.message.toString()),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Okay"),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<bool> checkIfEmailExists(String email) async {
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('users') // اسم المجموعة التي تخزن بيانات المستخدمين
+          .where('email', isEqualTo: email) // افترض أنك تخزن البريد الإلكتروني تحت الحقل 'email'
+          .limit(1)
+          .get();
+      final List<DocumentSnapshot> documents = result.docs;
+      return documents.isNotEmpty;
+    } catch (e) {
+      print("Error checking email existence: $e");
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +188,9 @@ class ResetPasswordScreen extends StatelessWidget {
                         style: TextStyle(color: Colors.grey),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: const Text(
                           'Sign in',
                           style: TextStyle(color: Colors.green),
@@ -119,7 +204,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        passwordReset(context); // تمرير الـ context هنا
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff6D6A6A),

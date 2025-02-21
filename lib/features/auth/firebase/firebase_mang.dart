@@ -14,6 +14,7 @@ class FirebaseManager {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (credential.user!.emailVerified) {
+
         onSuccess();
       } else {
         onError("verify your mail");
@@ -123,4 +124,5 @@ class FirebaseManager {
       rethrow;
     }
   }
+
 }
