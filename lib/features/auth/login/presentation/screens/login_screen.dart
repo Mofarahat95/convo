@@ -40,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _passwordController.text,
                                     () {
                                       GoRouter.of(context)
-                                          .pushReplacement(AppRoutes.homeRoute);
+                                          .go(AppRoutes.homeRoute);
                                     },
                                     (message) {
                                       showDialog(
@@ -228,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               onPressed: () {
                                                 GoRouter.of(context).pop();
                                               },
-                                              child:  Text("Okay"),
+                                              child: Text("Okay"),
                                             ),
                                           ],
                                         ),
@@ -316,9 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 30),
-
                     buildSocialLoginButtons(),
-
                   ],
                 ),
               ),

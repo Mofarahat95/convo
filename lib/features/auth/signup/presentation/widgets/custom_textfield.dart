@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
 class buildTextField extends StatelessWidget {
-  buildTextField(
-      {required this.controller,
-      required this.label,
-      required this.hintText,
-      keyboardType = TextInputType.text,
-      obscureText = false,
-      super.key});
+  buildTextField({
+    required this.controller,
+    required this.label,
+    required this.hintText,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.validator,
+    super.key,
+  });
 
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
   final String label;
   final String hintText;
-  final bool obscureText = false;
-  final TextInputType keyboardType = TextInputType.text;
+  final bool obscureText;
+  final TextInputType keyboardType;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,7 @@ class buildTextField extends StatelessWidget {
             controller: controller,
             obscureText: obscureText,
             keyboardType: keyboardType,
+            validator: validator,
             style: TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: hintText,
@@ -43,7 +47,13 @@ class buildTextField extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.grey),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
+                borderSide: BorderSide(color: Color(0xff6D6A6A)),
+              ),
+              errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
+              focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
               ),
             ),
           ),
