@@ -110,7 +110,7 @@ class FirebaseManager {
 
       // Navigate to Home screen after successful login
       if (userCredential.user != null) {
-        GoRouter.of(context).pushReplacement(AppRoutes.homeRoute);
+        GoRouter.of(context).go(AppRoutes.homeRoute);
         //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AppRoutes.homeRoute), // تأكد من تغيير HomePage إلى اسم الشاشة الرئيسية لديك;
       }
 
