@@ -1,43 +1,90 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/features/auth/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:convo/config/routes_manager/routes.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class firbaseeMang {
- // static get context => null;
+class FirebaseManager {
+  static Future<void> login(String email, String password, Function onSuccess,
+      Function onError) async {
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      if (credential.user!.emailVerified) {
+        onSuccess();
+      } else {
+        onError("verify your mail");
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "INVALID_LOGIN_CREDENTIALS") {
+        onError("Wrong Mail Or Password");
+      }
+    }
+  }
 
-  static Future<void> createAccount(String email, String password) async {
+  static Future<void> creatAccount(String name, String phone, String email,
+      String password, Function onSuccess, Function onError) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      UserModel userModel = UserModel(
+          email: email, id: credential.user!.uid, name: name, phone: phone);
+      credential.user?.sendEmailVerification();
+      FirebaseAuth.instance.sendPasswordResetEmail(
+        email: "email",
+      ); //forget password
+      addUserToFireStore(userModel);
+      onSuccess();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        onError(e.message);
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        onError(e.message);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  static Future<void> login(String email, String password, Function onSuccess,
-      Function onError) async {
-    try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      onSuccess();
-    } on FirebaseAuthException catch (e) {
-      onError(e.message);
-    }
+  // get user
+  static CollectionReference<UserModel> getusercollection() {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .withConverter<UserModel>(
+      fromFirestore: (snapshot, _) {
+        return UserModel.formJson(snapshot.data()!);
+      },
+      toFirestore: (user, _) {
+        return user.toJson();
+      },
+    );
   }
 
-  // Google Sign In
+  static Future<void> addUserToFireStore(UserModel user) async {
+    var collection = getusercollection();
+    var docRef = collection.doc();
+    user.id = docRef.id;
+    docRef.set(user);
+  }
+
+  static Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
   static Future<UserCredential> signInWithGoogle(BuildContext context) async {
     try {
       await GoogleSignIn().signOut();
@@ -58,18 +105,18 @@ class firbaseeMang {
         idToken: gAuth.idToken,
       );
       // Finally, let's sign in
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
       // Navigate to Home screen after successful login
       if (userCredential.user != null) {
-        GoRouter.of( context).pushReplacement(AppRoutes.homeRoute);
+        GoRouter.of(context).go(AppRoutes.homeRoute);
         //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AppRoutes.homeRoute), // تأكد من تغيير HomePage إلى اسم الشاشة الرئيسية لديك;
       }
 
       return userCredential;
       // Finally, let's sign in
       //return await FirebaseAuth.instance.signInWithCredential(credential);
-
     } catch (e) {
       // Handle any errors that occur during sign-in
       print('Error during Google Sign-In: $e');
