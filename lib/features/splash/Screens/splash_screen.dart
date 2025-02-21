@@ -14,11 +14,11 @@ class SplashScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              top: 30,
+              top: 50,
             ),
             child: Image.asset(
               'assets/images/Chat.png',
-              height: 390,
+              height: 280,
             ),
           ),
           Image.asset(
@@ -104,7 +104,7 @@ class SplashScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 40,
+            height: 30,
           ),
         ],
       ),
