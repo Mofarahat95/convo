@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/core/utils/values_manager.dart';
 import 'package:convo/features/auth/firebase/firebase_mang.dart';
 import 'package:convo/features/auth/login/presentation/widgets/social_buttons.dart';
 import 'package:convo/features/auth/signup/presentation/widgets/custom_textfield.dart';
@@ -18,7 +19,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   String? validateName(String? value) {
     if (value == null || value.isEmpty) return 'Name is required';
@@ -63,53 +65,85 @@ class _SignUpScreenState extends State<SignUpScreen> {
             alignment: Alignment.center,
             child: Padding(
               padding: EdgeInsets.only(top: 90, bottom: 30),
-              child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold)),
+              child: Text('Register',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40)),
-                color: Colors.white,
-              ),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 40),
-                      buildTextField(controller: _nameController, label: 'Name', hintText: 'Enter your name, e.g: John Doe', validator: validateName),
-                      buildTextField(controller: _emailController, label: 'Email', hintText: 'Enter your email, e.g: johndoe@gmail.com', validator: validateEmail),
-                      buildTextField(controller: _phoneController, label: 'Phone number', hintText: 'Enter your Phone number: +0112*', keyboardType: TextInputType.phone, validator: validatePhone),
-                      buildTextField(controller: _passwordController, label: 'Password', hintText: 'Enter your password, at least 8 character', obscureText: true, validator: validatePassword),
-                      buildTextField(controller: _confirmPasswordController, label: 'Confirm Password', hintText: 'Enter your password, at least 8 character', obscureText: true, validator: validateConfirmPassword),
-                      SizedBox(height: 25),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff6D6A6A),
-                            padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 10),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              FirebaseManager.creatAccount(
+          Container(
+            height: context.screenHeight * .7,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(40), topLeft: Radius.circular(40)),
+              color: Colors.white,
+            ),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 10,
+                  children: [
+                    SizedBox(height: 40),
+                    buildTextField(
+                        controller: _nameController,
+                        label: 'Name',
+                        hintText: 'Enter your name, e.g: John Doe',
+                        validator: validateName),
+                    buildTextField(
+                        controller: _emailController,
+                        label: 'Email',
+                        hintText: 'Enter your email, e.g: johndoe@gmail.com',
+                        validator: validateEmail),
+                    buildTextField(
+                        controller: _phoneController,
+                        label: 'Phone number',
+                        hintText: 'Enter your Phone number: +0112*',
+                        keyboardType: TextInputType.phone,
+                        validator: validatePhone),
+                    buildTextField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        hintText: 'Enter your password, at least 8 character',
+                        obscureText: true,
+                        validator: validatePassword),
+                    buildTextField(
+                        controller: _confirmPasswordController,
+                        label: 'Confirm Password',
+                        hintText: 'Enter your password, at least 8 character',
+                        obscureText: true,
+                        validator: validateConfirmPassword),
+                    SizedBox(height: 25),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xff6D6A6A),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 130, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0)),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            FirebaseManager.creatAccount(
                                 _nameController.text,
                                 _phoneController.text,
                                 _emailController.text,
                                 _passwordController.text,
-                                () => GoRouter.of(context).pushReplacement(AppRoutes.loginRoute),
-                                () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration failed')))
-                              );
-                            }
-                          },
-                          child: Text('Register', style: TextStyle(fontSize: 18, color: Colors.white)),
-                        ),
+                                () => GoRouter.of(context)
+                                    .pushReplacement(AppRoutes.loginRoute),
+                                () => ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                        content: Text('Registration failed'))));
+                          }
+                        },
+                        child: Text('Register',
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white)),
                       ),
-                      const SizedBox(height: 40),
-                      buildSocialLoginButtons(),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

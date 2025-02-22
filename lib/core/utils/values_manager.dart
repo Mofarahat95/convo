@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class AppMargin {
   static const double m5 = 5.0;
   static const double m8 = 8.0;
@@ -44,4 +46,9 @@ abstract class AppSize {
   static const double s30 = 30.0;
   static const double s34 = 34.0;
   static const double s38 = 38.0;
+}
+extension MediaQueryValues on BuildContext {
+  double get screenWidth => MediaQuery.of(this).size.width;
+  double get screenHeight => MediaQuery.of(this).size.height;
+  double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
 }
