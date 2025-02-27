@@ -109,7 +109,7 @@ class ChatScreen extends StatelessWidget {
                       radius: 25,
                       backgroundImage: AssetImage(chat['avatar']),
                     ),
-                    title: Text(chat['name'], style: TextStyle(color: Colors.black)),
+                    title: Text(chat['name'], style: TextStyle(color: Color(0xff000E08),fontWeight: FontWeight.bold,fontSize: 18)),
                     subtitle: Text(chat['message'], style: TextStyle(color: Colors.grey)),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
