@@ -1,4 +1,6 @@
+import 'package:convo/config/routes_manager/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -111,9 +113,10 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("Home", style: GoogleFonts.quicksand(
-            color: Colors.white,
-        )),
+        title: Text("Home",
+            style: GoogleFonts.quicksand(
+              color: Colors.white,
+            )),
         centerTitle: true,
         leading: Padding(
           padding: EdgeInsets.only(left: 16.0),
@@ -141,31 +144,34 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.all(12.0),
                   child: Column(
                     children: [
-                      SizedBox(height:4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
                           CircleAvatar(
-                            backgroundImage: AssetImage(
-                                'assets/images/profile.png'),
+                            backgroundImage:
+                                AssetImage('assets/images/profile.png'),
                             radius: 35,
                             backgroundColor: Colors.white,
                           ),
                           CircleAvatar(
                             radius: 12,
                             backgroundColor: Colors.green,
-                            child: Icon(Icons.add, color: Colors.white,
-                                size: 16),
+                            child:
+                                Icon(Icons.add, color: Colors.white, size: 16),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 2,),
+                      const SizedBox(
+                        height: 2,
+                      ),
                       Text("My status", style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),
-                ...statusList.map((status) =>
-                    Padding(
+                ...statusList.map((status) => Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Column(
                         children: [
@@ -180,8 +186,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 5),
-                          Text(status['name']!, style: TextStyle(color: Colors
-                              .white)),
+                          Text(status['name']!,
+                              style: TextStyle(color: Colors.white)),
                         ],
                       ),
                     )),
@@ -189,76 +195,104 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+            child: Stack(children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                ),
+                child: ListView.builder(
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    final chat = chats[index];
+                    return GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).push(AppRoutes.chatRoute);
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage(chat['avatar']),
+                        ),
+                        title: Text(chat['name'],
+                            style: TextStyle(
+                                color: Color(0xff000E08),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18)),
+                        subtitle: Text(chat['message'],
+                            style: TextStyle(color: Colors.grey)),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(chat['time'],
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12)),
+                            if (chat['unread'] > 0)
+                              CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.red,
+                                child: Text(chat['unread'].toString(),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12)),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              child: ListView.builder(
-                itemCount: chats.length,
-                itemBuilder: (context, index) {
-                  final chat = chats[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: AssetImage(chat['avatar']),
+              Positioned(
+                  bottom: 10,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: (){
+                      GoRouter.of(context).push(AppRoutes.chatBotRoute);
+                    },
+                    child: Image.asset(
+                      'assets/images/chat_bot.png',
+                      width: 30,
                     ),
-                    title: Text(chat['name'], style: TextStyle(
-                        color: Color(0xff000E08),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)),
-                    subtitle: Text(
-                        chat['message'], style: TextStyle(color: Colors.grey)),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(chat['time'], style: TextStyle(
-                            color: Colors.grey, fontSize: 12)),
-                        if (chat['unread'] > 0)
-                          CircleAvatar(
-                            radius: 12,
-                            backgroundColor: Colors.red,
-                            child: Text(chat['unread'].toString(),
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12)),
-                          ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+                  )),
+            ]),
           ),
         ],
       ),
       bottomNavigationBar: Container(
-
-
         height: 80,
         color: Colors.white,
-
         child: BottomNavigationBar(
           iconSize: 30,
           backgroundColor: Colors.white,
-
           selectedItemColor: Color(0xff24786D),
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: Image.asset('assets/images/Message.png', width: 30),
-              label: "Message",),
+              label: "Message",
+            ),
             BottomNavigationBarItem(
-              icon: Image.asset('assets/images/Calls.png', width: 30,),
-              label: "Calls",),
+              icon: Image.asset(
+                'assets/images/Calls.png',
+                width: 30,
+              ),
+              label: "Calls",
+            ),
             BottomNavigationBarItem(
-                icon: Image.asset('assets/images/Contacts.png', width: 30,),
+                icon: Image.asset(
+                  'assets/images/Contacts.png',
+                  width: 30,
+                ),
                 label: "Contacts"),
             BottomNavigationBarItem(
-                icon: Image.asset('assets/images/settings.png', width: 30,),
+                icon: Image.asset(
+                  'assets/images/settings.png',
+                  width: 30,
+                ),
                 label: "Settings"),
           ],
         ),

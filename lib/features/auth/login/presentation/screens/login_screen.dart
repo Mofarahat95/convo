@@ -212,8 +212,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _emailController.text,
                                     _passwordController.text,
                                     () {
-                                      GoRouter.of(context)
-                                          .go(AppRoutes.homeRoute);
+                                      GoRouter.of(context).go(
+                                        AppRoutes.homeRoute,
+                                      );
                                     },
                                     (message) {
                                       showDialog(

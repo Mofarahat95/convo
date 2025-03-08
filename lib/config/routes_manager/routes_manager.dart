@@ -1,6 +1,8 @@
 import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
 import 'package:convo/features/auth/signup/presentation/screens/signup_screen.dart';
+import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
+import 'package:convo/features/chat_bot/presentation/screens/chat_bot.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
 import 'package:convo/features/splash/Screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +25,14 @@ abstract class RoutesManager {
       GoRoute(
         path: AppRoutes.splashRoute,
         builder: (context, state) => SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.chatRoute,
+        builder: (context, state) => ChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.chatBotRoute,
+        builder: (context, state) => ChatBotScreen(),
       ),
     ],
   );

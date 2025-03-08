@@ -1,15 +1,14 @@
-  import 'package:flutter/material.dart';
-  class ChatScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Image.asset('assets/icons/back.png', width: 24, height: 24),
-          onPressed: () {},
-        ),
         title: Row(
           children: [
             Stack(
@@ -33,20 +32,35 @@
               ],
             ),
             SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Jhon Abraham",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                Text("Active now", style: TextStyle(color: Colors.grey, fontSize: 12)),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Jhon Abraham",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    "Active now",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
         actions: [
-          IconButton(icon: Image.asset('assets/images/Call.png', width: 24, height: 24), onPressed: () {}),
-          IconButton(icon: Image.asset('assets/Video.png', width: 24, height: 24), onPressed: () {}),
-
+          IconButton(
+              icon:
+                  Image.asset('assets/images/Call.png', width: 24, height: 24),
+              onPressed: () {}),
+          IconButton(
+              icon:
+                  Image.asset('assets/images/Video.png', width: 24, height: 24),
+              onPressed: () {}),
         ],
       ),
       body: Container(
@@ -57,12 +71,17 @@
               child: ListView(
                 padding: EdgeInsets.all(16),
                 children: [
-                  Center(child: Text("Today", style: TextStyle(color: Colors.grey))),
+                  Center(
+                      child:
+                          Text("Today", style: TextStyle(color: Colors.grey))),
                   SizedBox(height: 50),
                   _buildMessageBubble("Hello! Jhon Abraham", true, "10:30 AM"),
-                  _buildMessageBubble("Hello! Nazrul How are you?", false, "10:32 AM"),
-                  _buildMessageBubble("You did your job well!", true, "10:35 AM"),
-                  _buildMessageBubble("Have a great working week!!", false, "10:40 AM"),
+                  _buildMessageBubble(
+                      "Hello! Nazrul How are you?", false, "10:32 AM"),
+                  _buildMessageBubble(
+                      "You did your job well!", true, "10:35 AM"),
+                  _buildMessageBubble(
+                      "Have a great working week!!", false, "10:40 AM"),
                   _buildMessageBubble("Hope you like it", false, "10:45 AM"),
                   _buildAudioMessage("00:16", "10:50 AM"),
                   _buildMessageBubble("done", false, "10:52 AM"),
@@ -81,7 +100,8 @@
       padding: EdgeInsets.symmetric(vertical: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isMe) ...[
             CircleAvatar(
@@ -91,7 +111,8 @@
             SizedBox(width: 8),
           ],
           Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -156,7 +177,8 @@
       child: Row(
         children: [
           IconButton(
-            icon: Image.asset('assets/Attach.png', width: 24, height: 24),
+            icon:
+                Image.asset('assets/images/Attach.png', width: 24, height: 24),
             onPressed: () {},
           ),
           Expanded(
@@ -168,11 +190,12 @@
             ),
           ),
           IconButton(
-            icon: Image.asset('assets/cameraa.png', width: 24, height: 24),
+            icon:
+                Image.asset('assets/images/cameraa.png', width: 24, height: 24),
             onPressed: () {},
           ),
           IconButton(
-            icon: Image.asset('assets/Mic.png', width: 24, height: 24),
+            icon: Image.asset('assets/images/Mic.png', width: 24, height: 24),
             onPressed: () {},
           ),
         ],
