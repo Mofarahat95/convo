@@ -1,9 +1,8 @@
 import 'package:convo/config/routes_manager/routes_manager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-//import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -11,6 +10,7 @@ void main() async {
   );
   runApp(Convo());
 }
+
 class Convo extends StatelessWidget {
   const Convo({super.key});
 
@@ -18,7 +18,7 @@ class Convo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-routerConfig:RoutesManager.Routes
+      routerConfig: RoutesManager.Routes,
     );
   }
 }

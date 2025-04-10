@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SquareTite extends StatelessWidget {
+class SocialIcon extends StatelessWidget {
   final String imagePath;
   final Function()? onTap;
 
-  const SquareTite({
+  const SocialIcon({
     super.key,
     required this.imagePath,
     required this.onTap,
@@ -15,10 +15,8 @@ class SquareTite extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 70),
         child: Image.asset(
           imagePath,
-
           height: 50,
         ),
       ),
