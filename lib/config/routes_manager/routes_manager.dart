@@ -3,10 +3,12 @@ import 'package:convo/features/auth/login/presentation/screens/resetPass_screen.
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
 import 'package:convo/features/auth/login/presentation/screens/success_screen.dart';
 import 'package:convo/features/auth/signup/presentation/screens/register_screen.dart';
+import 'package:convo/features/calls/presentation/screens/call_screen.dart';
 import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
 import 'package:convo/features/chat_bot/presentation/screens/chat_bot.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
 import 'package:convo/features/splash/Screens/welcome_screen.dart';
+import 'package:convo/features/calls/presentation/screens/call_screen.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class RoutesManager {
@@ -43,6 +45,10 @@ abstract class RoutesManager {
       GoRoute(
         path: AppRoutes.chatBotRoute,
         builder: (context, state) => ChatBotScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.callRoute,
+        builder: (context, state) => CallScreen(),
       ),
     ],
   );

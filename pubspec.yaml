@@ -43,6 +43,10 @@ dependencies:
   flutter_facebook_auth: ^7.1.1
   flutter_bloc: ^9.1.0
   bottom_picker: ^3.0.0
+  dependencies:
+  agora_rtc_engine: ^6.2.0
+  permission_handler: ^11.0.0
+
 
 dev_dependencies:
   flutter_test:
