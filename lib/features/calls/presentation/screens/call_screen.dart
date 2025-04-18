@@ -12,7 +12,7 @@ class CallScreen extends StatelessWidget {
             child: ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Image.asset(
-                'lib/images/callImage.jpg',
+                'assets/images/callImage.jpg',
                 fit: BoxFit.cover,
               ),
             ),
@@ -34,7 +34,7 @@ class CallScreen extends StatelessWidget {
               const CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage(
-                    'lib/images/callImage.jpg'),
+                    'assets/images/callImage.jpg'),
               ),
               const SizedBox(
                 height: 10,
