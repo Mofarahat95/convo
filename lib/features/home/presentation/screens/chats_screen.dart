@@ -1,4 +1,5 @@
 import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/features/home/presentation/bloc/home_cubit.dart';
 import 'package:convo/features/home/presentation/bloc/home_states.dart';
 import 'package:flutter/material.dart';
@@ -11,35 +12,24 @@ class ChatsScreen extends StatelessWidget {
 
   final List<Map<String, dynamic>> chats = [
     {
-      "name": "Alex",
+      "name": "Kero Emad",
       "message": "How are you today?",
       "time": "2 min ago",
-      "unread": 3,
-      "avatar": "assets/images/alex.png"
+      "unread": 0,
+      "avatar": "assets/images/omar.png"
     },
     {
-      "name": "Team Align",
+      "name": "Omar Ahmed",
       "message": "Don't miss to attend the meeting.",
       "time": "2 min ago",
-      "unread": 4,
-      "avatar": "assets/images/team.png"
-    },
-    {
-      "name": "John",
-      "message": "Hey! Can you join the meeting?",
-      "time": "2 min ago",
       "unread": 0,
-      "avatar": "assets/images/john.png"
+      "avatar": "assets/images/kero.png"
     },
   ];
 
   final List<Map<String, String>> statusList = [
-    {"name": "Max", "avatar": "assets/images/max.png"},
-    {"name": "Marina", "avatar": "assets/images/marina.png"},
-    {"name": "Natelia", "avatar": "assets/images/natelia.png"},
-    {"name": "John", "avatar": "assets/images/john.png"},
-    {"name": "Max", "avatar": "assets/images/max.png"},
-    {"name": "Marina", "avatar": "assets/images/marina.png"},
+    {"name": "Omar", "avatar": "assets/images/kero.png"},
+    {"name": "Kero", "avatar": "assets/images/omar.png"},
   ];
 
   @override
@@ -72,9 +62,14 @@ class ChatsScreen extends StatelessWidget {
                 onTap: () {
                   // action for profile or settings
                 },
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundImage: AssetImage("assets/images/profile.png"),
+                child: InkWell(
+                  onTap: () {
+                    GoRouter.of(context).push(AppRoutes.profileRoute);
+                  },
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage: AssetImage(ImageAssets.moImage),
+                  ),
                 ),
               ),
             ),
@@ -99,8 +94,7 @@ class ChatsScreen extends StatelessWidget {
                           alignment: Alignment.bottomRight,
                           children: [
                             CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/images/profile.png'),
+                              backgroundImage: AssetImage(ImageAssets.moImage),
                               radius: 35,
                               backgroundColor: Colors.white,
                             ),

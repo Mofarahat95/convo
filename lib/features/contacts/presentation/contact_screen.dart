@@ -14,10 +14,12 @@ class ContactsScreen extends StatefulWidget {
 class _ContactsScreenState extends State<ContactsScreen> {
   @override
   void initState() {
-    _fetchContacts();
+    getContactPhones();
     super.initState();
   }
+
   final List<Contact> _contacts = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,7 +109,30 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 
-  Future<void> _fetchContacts() async {
+
+  Future<List<String>> getContactPhones() async {
+    List<String> numbers = [];
+
+    // طلب صلاحية الوصول
+    bool granted = await FlutterContacts.requestPermission();
+    if (!granted) return numbers;
+
+    // جلب الكونتكتس
+    final contacts = await FlutterContacts.getContacts(withProperties: true);
+
+    for (var contact in contacts) {
+      for (var phone in contact.phones) {
+        // تنظيف الرقم من المسافات + كود الدولة
+        String cleaned = phone.number.replaceAll(RegExp(r'\s+|\+2|\+'), '');
+        numbers.add(cleaned);
+      }
+    }
+
+    return numbers;
+  }
+
+
+/*Future<void> _fetchContacts() async {
     try {
       final PermissionStatus permissionStatus =
           await Permission.contacts.request();
@@ -124,4 +149,5 @@ class _ContactsScreenState extends State<ContactsScreen> {
       }
     } on Exception catch (e) {}
   }
+}*/
 }

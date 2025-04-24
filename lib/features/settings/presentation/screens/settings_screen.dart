@@ -1,4 +1,5 @@
 import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/core/utils/colors_manager.dart';
 import 'package:convo/core/utils/styles_manager.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_cubit.dart';
@@ -41,9 +42,9 @@ class SettingsScreen extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            radius: 35,
+                            radius: 50,
                             backgroundImage: AssetImage(
-                                "assets/images/profile.png"), // Use your image here
+                                ImageAssets.moImage), // Use your image here
                           ),
                           SizedBox(width: 20),
                           Column(
