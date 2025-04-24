@@ -5,10 +5,10 @@ import 'package:convo/core/utils/styles_manager.dart';
 import 'package:convo/core/utils/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../config/routes_manager/routes.dart';
+import '../../../../config/routes_manager/routes.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class onBoardingScreen extends StatelessWidget {
+  const onBoardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

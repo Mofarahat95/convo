@@ -1,9 +1,11 @@
+import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/core/utils/colors_manager.dart';
 import 'package:convo/core/utils/styles_manager.dart';
 import 'package:convo/features/auth/login/presentation/widgets/social_icon.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SocialButtons extends StatelessWidget {
   const SocialButtons({super.key});
@@ -43,7 +45,9 @@ class SocialButtons extends StatelessWidget {
             SizedBox(width: 90),
             SocialIcon(
               imagePath: ImageAssets.appleIcon,
-              onTap: () {},
+              onTap: () {
+                GoRouter.of(context).push(AppRoutes.contactsScreen);
+              },
             ),
             SocialIcon(
               imagePath: ImageAssets.facebookIcon,
@@ -54,7 +58,7 @@ class SocialButtons extends StatelessWidget {
             SocialIcon(
               imagePath: ImageAssets.googleIcon,
               onTap: () {
-                LoginCubit.get(context).signInWithFacebook();
+                LoginCubit.get(context).signInWithGoogle(context);
               },
             ),
           ],

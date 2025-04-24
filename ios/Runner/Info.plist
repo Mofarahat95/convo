@@ -16,6 +16,8 @@
   </array>
   </dict>
 </array>
+<key>NSContactsUsageDescription</key>
+<string>This app requires contacts access to display your contacts list</string>
 <key>FacebookAppID</key>
 <string>971341268265294</string>
 <key>FacebookClientToken</key>

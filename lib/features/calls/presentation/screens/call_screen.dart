@@ -133,7 +133,7 @@ class _CallScreenState extends State<CallScreen> {
             child: ImageFiltered(
               imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Image.asset(
-                'lib/images/callImage.jpg',
+                'assets/images/callImage.jpg',
                 fit: BoxFit.cover,
               ),
             ),
@@ -150,7 +150,13 @@ class _CallScreenState extends State<CallScreen> {
               const SizedBox(height: 200),
               const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('lib/images/callImage.jpg'),
+
+                backgroundImage: AssetImage(
+                    'assets/images/callImage.jpg'),
+              ),
+              const SizedBox(
+                height: 10,
+
               ),
               const SizedBox(height: 10),
               Text(

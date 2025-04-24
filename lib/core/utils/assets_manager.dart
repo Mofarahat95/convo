@@ -10,6 +10,7 @@ abstract class ImageAssets {
   static const String logoImage = '$imagesPath/logo.png';
   static const String loginImage = '$imagesPath/login.png';
   static const String registerImage = '$imagesPath/register.png';
+  static const String moImage = '$imagesPath/mo.png';
   static const String chatBackground = '$imagesPath/chat_background.png';
   static const String userPlaceholder = '$imagesPath/user_placeholder.png';
   static const String groupPlaceholder = '$imagesPath/group_placeholder.png';
