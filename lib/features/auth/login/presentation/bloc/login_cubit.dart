@@ -8,12 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
   LoginCubit() : super(LoginInitialState());
   bool isLoading = false;
 
   static LoginCubit get(context) => BlocProvider.of<LoginCubit>(context);
+  bool userExist = false;
 
   Future<void> login(String email, String password) async {
     emit(LoginLoadingState());
@@ -23,6 +25,8 @@ class LoginCubit extends Cubit<LoginStates> {
           .signInWithEmailAndPassword(email: email, password: password);
       if (credential.user!.emailVerified) {
         emit(LoginSuccessState());
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('isLoggedIn', true);
       }
     } on FirebaseAuthException catch (e) {
       emit(LoginErrorState(e.toString()));
@@ -93,5 +97,15 @@ class LoginCubit extends Cubit<LoginStates> {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> Logout() async {
+    await FirebaseAuth.instance.signOut();
+    emit(LogoutSuccessState());
+  }
+
+  void checkUserLoggedIn(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userExist = prefs.getBool('isLoggedIn') ?? false;
   }
 }

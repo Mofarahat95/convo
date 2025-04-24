@@ -5,8 +5,11 @@ import 'package:convo/features/auth/login/presentation/screens/success_screen.da
 import 'package:convo/features/auth/signup/presentation/screens/register_screen.dart';
 import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
 import 'package:convo/features/chat_bot/presentation/screens/chat_bot.dart';
+import 'package:convo/features/contacts/presentation/contact_screen.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
-import 'package:convo/features/splash/Screens/welcome_screen.dart';
+import 'package:convo/features/splash/presentation/screens/welcome_screen.dart';
+import 'package:convo/features/splash/presentation/screens/splash_screen.dart';
+import 'package:convo/features/user_profile/screens/user_profile.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class RoutesManager {
@@ -34,7 +37,7 @@ abstract class RoutesManager {
       ),
       GoRoute(
         path: AppRoutes.splashRoute,
-        builder: (context, state) => WelcomeScreen(),
+        builder: (context, state) => SplashScreen(),
       ),
       GoRoute(
         path: AppRoutes.chatRoute,
@@ -43,6 +46,18 @@ abstract class RoutesManager {
       GoRoute(
         path: AppRoutes.chatBotRoute,
         builder: (context, state) => ChatBotScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.contactsScreen,
+        builder: (context, state) => ContactsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.onBoardingRoute,
+        builder: (context, state) => onBoardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profileRoute,
+        builder: (context, state) => UserProfileScreen(),
       ),
     ],
   );
