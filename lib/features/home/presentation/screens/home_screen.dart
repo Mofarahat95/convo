@@ -1,14 +1,8 @@
-import 'package:convo/config/routes_manager/routes.dart';
-import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/features/calls/presentation/screens/call_history.dart';
-import 'package:convo/features/calls/presentation/screens/call_screen.dart';
-import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
 import 'package:convo/features/contacts/presentation/contact_screen.dart';
 import 'package:convo/features/home/presentation/screens/chats_screen.dart';
 import 'package:convo/features/settings/presentation/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -40,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/images/message.png', width: 30),
+            icon: Image.asset('assets/images/Message.png', width: 30),
             label: "Message",
           ),
           BottomNavigationBarItem(

@@ -13,6 +13,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text(
             'Settings',
@@ -21,56 +22,56 @@ class SettingsScreen extends StatelessWidget {
           toolbarHeight: 100,
         ),
         backgroundColor: Colors.black,
-        body: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Expanded(
-                child: Stack(children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(40),
+              topRight: Radius.circular(40),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: AssetImage(
+                          ImageAssets.moImage), // Use your image here
+                    ),
+                    SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Mohamed Farahat',
+                          style: quicksand18(color: AppColors.primary900),
+                        ),
+                        Text(
+                          'Never give up 💪',
+                          style: quicksand14(color: AppColors.primary900),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.qr_code,
+                      color: AppColors.primary900,
+                      size: 30,
+                    ),
+                  ],
                 ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 16),
+                Divider(color: AppColors.primary200),
+                SizedBox(height: 8),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
-                      SizedBox(height: 50),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: AssetImage(
-                                ImageAssets.moImage), // Use your image here
-                          ),
-                          SizedBox(width: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Mohamed Farahat',
-                                style: quicksand18(color: AppColors.primary900),
-                              ),
-                              Text(
-                                'Never give up 💪',
-                                style: quicksand14(color: AppColors.primary900),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Icon(
-                            Icons.qr_code,
-                            color: AppColors.primary900,
-                            size: 30,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Divider(color: AppColors.primary200),
-                      SizedBox(height: 20),
                       SettingsOption(
                         icon: Icons.lock,
                         title: 'Account',
@@ -112,12 +113,13 @@ class SettingsScreen extends StatelessWidget {
                           subtitle: '',
                         ),
                       ),
-                      Spacer(),
                     ],
                   ),
                 ),
-              ),
-            ]))));
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -159,7 +161,7 @@ class SettingsOption extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.grey,
                     fontSize: 12,
                   ),
                 ),
