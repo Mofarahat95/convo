@@ -12,80 +12,89 @@ class ContactsScreen extends StatefulWidget {
 }
 
 class _ContactsScreenState extends State<ContactsScreen> {
-  final List<Contact> _contacts = [];
-  final List<Map<String, dynamic>> _appContacts = [];
-  bool _isLoading = true;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final List<Contact> _contacts = [];
+  final List<Map<String, dynamic>> _matchedUsers = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchAndSetContacts();
+    fetchAndCompareContacts();
   }
 
-  // تطبيع رقم الهاتف لإزالة المسافات والفواصل وكود الدولة
+  // دالة لتطبيع رقم الهاتف (إزالة المسافات والفواصل)
   String normalizePhoneNumber(String phoneNumber) {
-    String normalized = phoneNumber.replaceAll(RegExp(r'[^\d+]'), ''); // إزالة أي رموز غير رقمية
+    String normalized = phoneNumber.replaceAll(
+        RegExp(r'[^\d+]'), ''); // إزالة أي رموز غير رقمية
     if (normalized.startsWith('20')) {
       normalized = normalized.substring(2); // إزالة كود الدولة المصري
     }
     return normalized;
   }
 
-  Future<void> fetchAndSetContacts() async {
+  // جلب الأرقام من الجهاز
+  Future<void> fetchAndCompareContacts() async {
     bool granted = await FlutterContacts.requestPermission();
     if (!granted) {
       _showPermissionDeniedDialog();
       return;
     }
 
-    // Get all device contacts
-    final deviceContacts = await FlutterContacts.getContacts(withProperties: true);
+    // جلب الأرقام من جهاز المستخدم
+    final deviceContacts =
+        await FlutterContacts.getContacts(withProperties: true);
 
-    // Get all registered users from Firebase
+    // جلب الأرقام المسجلة في Firebase
     try {
       final usersSnapshot = await _firestore.collection('Users').get();
       final List<Map<String, dynamic>> firebaseUsers = usersSnapshot.docs
           .map((doc) => {
-        'id': doc.id,
-        'phoneNumber': doc.data()['phoneNumber'] ?? '',
-        'name': doc.data()['name'] ?? '',
-        'profilePic': doc.data()['profilePic'] ?? '',
-      })
+                'id': doc.id,
+                'phoneNumber': doc.data()['phoneNumber'] ?? '',
+                'name': doc.data()['name'] ?? '',
+                'profilePic': doc.data()['profilePic'] ?? '',
+                'email': doc.data()['email'] ?? '',
+              })
           .toList();
 
-      // Filter contacts that are also app users
-      final List<Map<String, dynamic>> appContacts = [];
+      // مقارنة الأرقام بين جهات الاتصال في الجهاز و Firebase
+      final List<Map<String, dynamic>> matchedUsers = [];
 
       for (final contact in deviceContacts) {
         for (final phone in contact.phones) {
-          // تطبيع رقم الهاتف من جهة الاتصال
           String normalizedPhoneNumber = normalizePhoneNumber(phone.number);
 
-          // التحقق مما إذا كانت هذه الجهة موجودة في Firebase
+          // التحقق من وجود تطابق في Firebase
           final matchingUser = firebaseUsers.firstWhere(
-                (user) => normalizePhoneNumber(user['phoneNumber']) == normalizedPhoneNumber,
+            (user) =>
+                normalizePhoneNumber(user['phoneNumber']) ==
+                normalizedPhoneNumber,
             orElse: () => {},
           );
 
-          if (matchingUser.isNotEmpty && matchingUser['id'] != _auth.currentUser?.uid) {
-            appContacts.add({
+          if (matchingUser.isNotEmpty &&
+              matchingUser['id'] != _auth.currentUser?.uid) {
+            matchedUsers.add({
               'contact': contact,
               'userId': matchingUser['id'],
               'name': matchingUser['name'],
               'profilePic': matchingUser['profilePic'],
+              'phone': matchingUser['phoneNumber'],
+              'email': matchingUser['email'],
             });
-            break; // Found a match for this contact, no need to check other phone numbers
+            break; // لا حاجة للاستمرار في التحقق من الأرقام الأخرى لهذا الاتصال
           }
         }
       }
 
+      // تحديث الواجهة بعد المقارنة
       setState(() {
         _contacts.clear();
         _contacts.addAll(deviceContacts);
-        _appContacts.clear();
-        _appContacts.addAll(appContacts);
+        _matchedUsers.clear();
+        _matchedUsers.addAll(matchedUsers);
         _isLoading = false;
       });
     } catch (e) {
@@ -96,6 +105,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
     }
   }
 
+  // دالة لإظهار رسالة إذا تم رفض الصلاحيات
   void _showPermissionDeniedDialog() {
     showDialog(
       context: context,
@@ -103,7 +113,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         title: const Text('Permission Required'),
         content: const Text(
           'Contacts permission is required to fetch contacts. '
-              'Please enable it in settings.',
+          'Please enable it in settings.',
         ),
         actions: [
           TextButton(
@@ -122,9 +132,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 
+  // التنقل إلى شاشة المحادثة مع المستخدم
   void _navigateToChatScreen(String userId, String name) {
-    // Navigate to chat screen with the selected user
-    // Implement this based on your app's chat screen navigation
+    // تنفيذ التنقل إلى شاشة الدردشة مع المستخدم المحدد
+    // على سبيل المثال:
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChatScreen(userId: userId, name: name),
+    //   ),
+    // );
   }
 
   @override
@@ -145,7 +162,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildContactsTitle(),
-              _buildContactsList(),
+              _buildMatchedUsersList(),
             ],
           ),
         ),
@@ -153,18 +170,21 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 
+  // بناء الـ AppBar
   AppBar _buildAppBar() {
     return AppBar(
       centerTitle: true,
       backgroundColor: Colors.black,
       title: const Text(
         'Contacts',
-        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
       ),
       toolbarHeight: 100,
     );
   }
 
+  // بناء عنوان جهات الاتصال
   Widget _buildContactsTitle() {
     return Padding(
       padding: const EdgeInsets.only(top: 25, left: 25, bottom: 15),
@@ -179,54 +199,42 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 
-  Widget _buildContactsList() {
+  // بناء قائمة المستخدمين المتطابقين
+  Widget _buildMatchedUsersList() {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator(color: Colors.black))
-            : _appContacts.isEmpty
-            ? const Center(child: Text('No contacts using this app'))
-            : ListView.builder(
-          itemCount: _appContacts.length,
-          itemBuilder: (context, index) {
-            final contactData = _appContacts[index];
-            final contact = contactData['contact'] as Contact;
-            final userId = contactData['userId'] as String;
-            final displayName = contact.displayName;
-            final firstLetter = displayName[0].toUpperCase();
+            ? const Center(
+                child: CircularProgressIndicator(color: Colors.black))
+            : _matchedUsers.isEmpty
+                ? const Center(child: Text('No matched contacts'))
+                : ListView.builder(
+                    itemCount: _matchedUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = _matchedUsers[index];
+                      final contact = user['contact'] as Contact;
+                      final userId = user['userId'] as String;
+                      final displayName = user['name'] as String;
+                      final profilePic = user['profilePic'] as String;
+                      final phone = user['phone'] as String;
+                      final email = user['email'] as String;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (index == 0 ||
-                    _appContacts[index - 1]['contact'].displayName[0].toUpperCase() != firstLetter)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      firstLetter,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
+                      return ListTile(
+                        leading: profilePic.isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(profilePic),
+                              )
+                            : CircleAvatar(
+                                child: Text(displayName[0].toUpperCase()),
+                                backgroundColor: Colors.grey[300],
+                              ),
+                        title: Text(displayName),
+                        subtitle: Text('$phone\n$email'),
+                        onTap: () => _navigateToChatScreen(userId, displayName),
+                      );
+                    },
                   ),
-                ListTile(
-                  leading: contactData['profilePic'] != null && contactData['profilePic'].isNotEmpty
-                      ? CircleAvatar(
-                    backgroundImage: NetworkImage(contactData['profilePic']),
-                  )
-                      : CircleAvatar(
-                    child: Text(displayName[0].toUpperCase()),
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  title: Text(displayName),
-                  subtitle: Text(
-                    contact.phones.isEmpty ? "No phone number" : '${contact.phones[0].number}',
-                  ),
-                  onTap: () => _navigateToChatScreen(userId, displayName),
-                ),
-              ],
-            );
-          },
-        ),
       ),
     );
   }
