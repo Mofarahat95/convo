@@ -3,13 +3,14 @@ import 'package:convo/features/auth/login/presentation/screens/resetPass_screen.
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
 import 'package:convo/features/auth/login/presentation/screens/success_screen.dart';
 import 'package:convo/features/auth/signup/presentation/screens/register_screen.dart';
+import 'package:convo/features/calls/presentation/screens/call_screen.dart';
 import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
 import 'package:convo/features/chat_bot/presentation/screens/chat_bot.dart';
 import 'package:convo/features/contacts/presentation/contact_screen.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
+import 'package:convo/features/calls/presentation/screens/call_screen.dart';
 import 'package:convo/features/splash/presentation/screens/welcome_screen.dart';
 import 'package:convo/features/splash/presentation/screens/splash_screen.dart';
-import 'package:convo/features/user_profile/screens/user_profile.dart';
 import 'package:go_router/go_router.dart';
 
 abstract class RoutesManager {
@@ -48,6 +49,22 @@ abstract class RoutesManager {
         builder: (context, state) => ChatBotScreen(),
       ),
       GoRoute(
+        path: AppRoutes.callRoute,
+        builder: (context, state) {
+          final callerId = '';
+          final receiverId = '';
+          final channelId = '';
+          final token = '';
+
+          return CallScreen(
+            callerId: callerId,
+            receiverId: receiverId,
+            channelId: channelId,
+            token: token,
+          );
+        },
+      ),
+
         path: AppRoutes.contactsScreen,
         builder: (context, state) => ContactsScreen(),
       ),

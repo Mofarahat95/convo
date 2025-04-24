@@ -1,3 +1,4 @@
+
 abstract class AppRoutes {
   static const String splashRoute = '/';
   static const String onBoardingRoute = '/onBoarding';
@@ -11,4 +12,6 @@ abstract class AppRoutes {
   static const String contactsScreen = '/contacts';
   static const String settingsRoute = '/Settings';
   static const String profileRoute = '/profile';
+   static const String callRoute='/Call';
+
 }

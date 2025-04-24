@@ -55,8 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 'assets/images/Contacts.png',
                 width: 30,
               ),
+
               label: "Contacts"),
           BottomNavigationBarItem(
+
               icon: Image.asset(
                 'assets/images/settings.png',
                 width: 30,
