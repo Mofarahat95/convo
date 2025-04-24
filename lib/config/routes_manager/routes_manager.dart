@@ -48,8 +48,21 @@ abstract class RoutesManager {
       ),
       GoRoute(
         path: AppRoutes.callRoute,
-        builder: (context, state) => CallScreen(),
+        builder: (context, state) {
+          final callerId = '';
+          final receiverId = '';
+          final channelId = '';
+          final token = '';
+
+          return CallScreen(
+            callerId: callerId,
+            receiverId: receiverId,
+            channelId: channelId,
+            token: token,
+          );
+        },
       ),
+
     ],
   );
 }
