@@ -1,3 +1,4 @@
+import 'package:convo/features/calls/presentation/screens/vedio_call.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -75,11 +76,19 @@ class ChatScreen extends StatelessWidget {
     return [
       IconButton(
         icon: Image.asset('assets/images/Call.png', width: 24, height: 24),
-        onPressed: () {},
+        onPressed: () {
+
+        },
       ),
       IconButton(
         icon: Image.asset('assets/images/Video.png', width: 24, height: 24),
-        onPressed: () {},
+        onPressed: () {
+          ZegoVideoCall(
+            callid: "123456",
+            userid: "123",
+            otherUserId:"456",
+          );
+        },
       ),
     ];
   }
