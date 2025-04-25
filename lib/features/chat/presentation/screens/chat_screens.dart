@@ -1,5 +1,6 @@
-import 'package:convo/features/calls/presentation/screens/vedio_call.dart';
 import 'package:flutter/material.dart';
+import 'package:convo/features/calls/presentation/screens/vedio_call.dart'; // تأكد من استيراد شاشة الاتصال بالفيديو
+import 'package:convo/features/calls/presentation/screens/voice_call.dart'; // تأكد من استيراد شاشة الاتصال الصوتي
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -7,13 +8,13 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       body: _buildChatBody(),
     );
   }
 
   // App Bar with user info and call buttons
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -24,7 +25,7 @@ class ChatScreen extends StatelessWidget {
           _buildUserInfo(),
         ],
       ),
-      actions: _buildAppBarActions(),
+      actions: _buildAppBarActions(context),
     );
   }
 
@@ -72,28 +73,44 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildAppBarActions() {
+  List<Widget> _buildAppBarActions(BuildContext context) {
     return [
+      // Call Icon
       IconButton(
         icon: Image.asset('assets/images/Call.png', width: 24, height: 24),
         onPressed: () {
-
+          // الانتقال إلى شاشة المكالمة الصوتية
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ZimVoiceCall(
+                callid: "123456", // يجب تحديثها بناءً على الحالة
+                userid: "123", // يجب تحديثها بناءً على المستخدم الحالي
+                otherUserId: "456", // يجب تحديثها بناءً على المستخدم الآخر
+              ),
+            ),
+          );
         },
       ),
+      // Video Icon
       IconButton(
         icon: Image.asset('assets/images/Video.png', width: 24, height: 24),
         onPressed: () {
-          ZegoVideoCall(
-            callid: "123456",
-            userid: "123",
-            otherUserId:"456",
+          // الانتقال إلى شاشة المكالمة بالفيديو
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ZegoVideoCall(
+                callid: "123456", // يجب تحديثها بناءً على الحالة
+                userid: "123", // يجب تحديثها بناءً على المستخدم الحالي
+                otherUserId: "456", // يجب تحديثها بناءً على المستخدم الآخر
+              ),
+            ),
           );
         },
       ),
     ];
   }
 
-  // Main chat body with messages and input field
+  // Main chat body with messages and input field (تم حذف حقل الإدخال)
   Widget _buildChatBody() {
     return Container(
       color: Colors.white,
@@ -102,7 +119,7 @@ class ChatScreen extends StatelessWidget {
           Expanded(
             child: _buildMessagesList(),
           ),
-          _buildMessageInput(),
+          // لم نعد بحاجة إلى إدخال نص أو أي حقل آخر هنا
         ],
       ),
     );
@@ -198,37 +215,6 @@ class ChatScreen extends StatelessWidget {
             Text(time, style: const TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: Colors.white,
-      child: Row(
-        children: [
-          IconButton(
-            icon: Image.asset('assets/images/Attach.png', width: 24, height: 24),
-            onPressed: () {},
-          ),
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Write your message",
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Image.asset('assets/images/cameraa.png', width: 24, height: 24),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Image.asset('assets/images/Mic.png', width: 24, height: 24),
-            onPressed: () {},
-          ),
-        ],
       ),
     );
   }
