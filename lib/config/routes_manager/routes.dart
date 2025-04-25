@@ -10,5 +10,9 @@ abstract class AppRoutes {
   static const String loginRoute = '/login';
   static const String contactsScreen = '/contacts';
   static const String settingsRoute = '/Settings';
+  static const String chatbotSettingsRoute = '/botsettings';
+  static const String imageRoute = '/image';
   static const String profileRoute = '/profile';
+  static const String workSpaceRoute = '/workSpace';
+  static const String insidechatRoute = '/insidechat';
 }

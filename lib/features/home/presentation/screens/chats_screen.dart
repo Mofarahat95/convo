@@ -194,7 +194,7 @@ class ChatsScreen extends StatelessWidget {
                     right: 20,
                     child: GestureDetector(
                       onTap: () {
-                        GoRouter.of(context).push(AppRoutes.chatBotRoute);
+                        GoRouter.of(context).push(AppRoutes.insidechatRoute);
                       },
                       child: Image.asset(
                         'assets/images/chat_bot.png',

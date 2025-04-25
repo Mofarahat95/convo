@@ -1,3 +1,7 @@
+import 'package:convo/chatbot/chat/chat.dart';
+import 'package:convo/chatbot/image/image.dart';
+import 'package:convo/chatbot/settings/settings.dart';
+import 'package:convo/chatbot/workspace/workspace.dart';
 import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/screens/resetPass_screen.dart';
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
@@ -58,6 +62,22 @@ abstract class RoutesManager {
       GoRoute(
         path: AppRoutes.profileRoute,
         builder: (context, state) => UserProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.imageRoute,
+        builder: (context, state) => ImagePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.workSpaceRoute,
+        builder: (context, state) => WorkspacePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.chatbotSettingsRoute,
+        builder: (context, state) => SettingsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.insidechatRoute,
+        builder: (context, state) => ChatPage(),
       ),
     ],
   );
