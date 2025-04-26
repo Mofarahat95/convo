@@ -1,3 +1,5 @@
+import 'package:convo/features/calls/presentation/screens/vedio_call.dart';
+import 'package:convo/features/calls/presentation/screens/voice_call.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -23,18 +25,18 @@ class UserProfileScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 50,
                     backgroundImage:
-                        AssetImage('assets/user_profile.png'), // ضع صورتك هنا
+                        AssetImage('assets/images/mo.png'), // ضع صورتك هنا
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Jhon Abraham',
+                    'Mohamed Farahat',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '@jhonabraham',
+                    'Flutter developer',
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                   SizedBox(height: 15),
@@ -42,7 +44,7 @@ class UserProfileScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Image.asset('assets/message.png'),
+                        icon: Image.asset('assets/images/Message.png'),
                         // ضع صورة الايقونة
                         onPressed: () {},
                       ),
@@ -50,23 +52,49 @@ class UserProfileScreen extends StatelessWidget {
                         width: 20,
                       ),
                       IconButton(
-                        icon: Image.asset('assets/video_call.png'),
+                        icon: Image.asset('assets/images/video_call.png'),
                         // ضع صورة الايقونة
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ZegoVideoCall(
+                                callid:
+                                    "123456", // يجب تحديثها بناءً على الحالة
+                                userid:
+                                    "123", // يجب تحديثها بناءً على المستخدم الحالي
+                                otherUserId:
+                                    "456", // يجب تحديثها بناءً على المستخدم الآخر
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(
                         width: 20,
                       ),
                       IconButton(
-                        icon: Image.asset('assets/call.png'),
+                        icon: Image.asset('assets/images/Calls.png'),
                         // ضع صورة الايقونة
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ZimVoiceCall(
+                                callid:
+                                    "123456", // يجب تحديثها بناءً على الحالة
+                                userid:
+                                    "123", // يجب تحديثها بناءً على المستخدم الحالي
+                                otherUserId:
+                                    "456", // يجب تحديثها بناءً على المستخدم الآخر
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(
                         width: 20,
                       ),
                       IconButton(
-                        icon: Image.asset('assets/more.png'),
+                        icon: Image.asset('assets/images/more.png'),
                         // ضع صورة الايقونة
                         onPressed: () {},
                       ),
@@ -92,22 +120,17 @@ class UserProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Display Name', style: TextStyle(color: Colors.grey)),
-                  Text('Jhon Abraham',
+                  Text('Mohamed Farahat',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text('Email Address', style: TextStyle(color: Colors.grey)),
-                  Text('jhonabraham20@gmail.com',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 10),
-                  Text('Address', style: TextStyle(color: Colors.grey)),
-                  Text('33 street west subidbazar, sylhet',
+                  Text('mofarahat88@gmail.com',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text('Phone Number', style: TextStyle(color: Colors.grey)),
-                  Text('(320) 555-0104',
+                  Text('01022181170',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 20),
@@ -123,11 +146,14 @@ class UserProfileScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Image.asset('assets/image.png', width: 103, height: 80),
+                      Image.asset('assets/images/kero.png',
+                          width: 103, height: 80),
                       SizedBox(width: 10),
-                      Image.asset('assets/image2.png', width: 103, height: 80),
+                      Image.asset('assets/images/facebook.png',
+                          width: 103, height: 80),
                       SizedBox(width: 10),
-                      Image.asset('assets/image3.png', width: 103, height: 80),
+                      Image.asset('assets/images/google.png',
+                          width: 103, height: 80),
                     ],
                   ),
                 ],

@@ -1,5 +1,8 @@
+import 'package:convo/config/routes_manager/routes.dart';
+import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,8 +29,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   // دالة لتطبيع رقم الهاتف (إزالة المسافات والفواصل)
   String normalizePhoneNumber(String phoneNumber) {
-    String normalized = phoneNumber.replaceAll(
-        RegExp(r'[^\d+]'), ''); // إزالة أي رموز غير رقمية
+    String normalized = phoneNumber.replaceAll(RegExp(r'[^\d+]'), ''); // إزالة أي رموز غير رقمية
     if (normalized.startsWith('20')) {
       normalized = normalized.substring(2); // إزالة كود الدولة المصري
     }
@@ -44,19 +46,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
     // جلب الأرقام من جهاز المستخدم
     final deviceContacts =
-        await FlutterContacts.getContacts(withProperties: true);
+    await FlutterContacts.getContacts(withProperties: true);
 
     // جلب الأرقام المسجلة في Firebase
     try {
       final usersSnapshot = await _firestore.collection('Users').get();
       final List<Map<String, dynamic>> firebaseUsers = usersSnapshot.docs
           .map((doc) => {
-                'id': doc.id,
-                'phoneNumber': doc.data()['phoneNumber'] ?? '',
-                'name': doc.data()['name'] ?? '',
-                'profilePic': doc.data()['profilePic'] ?? '',
-                'email': doc.data()['email'] ?? '',
-              })
+        'id': doc.id,
+        'phoneNumber': doc.data()['phoneNumber'] ?? '',
+        'name': doc.data()['name'] ?? '',
+        'profilePic': doc.data()['profilePic'] ?? '',
+        'email': doc.data()['email'] ?? '',
+      })
           .toList();
 
       // مقارنة الأرقام بين جهات الاتصال في الجهاز و Firebase
@@ -68,8 +70,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
           // التحقق من وجود تطابق في Firebase
           final matchingUser = firebaseUsers.firstWhere(
-            (user) =>
-                normalizePhoneNumber(user['phoneNumber']) ==
+                (user) =>
+            normalizePhoneNumber(user['phoneNumber']) ==
                 normalizedPhoneNumber,
             orElse: () => {},
           );
@@ -113,7 +115,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         title: const Text('Permission Required'),
         content: const Text(
           'Contacts permission is required to fetch contacts. '
-          'Please enable it in settings.',
+              'Please enable it in settings.',
         ),
         actions: [
           TextButton(
@@ -135,13 +137,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
   // التنقل إلى شاشة المحادثة مع المستخدم
   void _navigateToChatScreen(String userId, String name) {
     // تنفيذ التنقل إلى شاشة الدردشة مع المستخدم المحدد
-    // على سبيل المثال:
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ChatScreen(userId: userId, name: name),
-    //   ),
-    // );
+    GoRouter.of(context).push(AppRoutes.chatRoute,extra:name);
   }
 
   @override
@@ -206,35 +202,35 @@ class _ContactsScreenState extends State<ContactsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Colors.black))
+            child: CircularProgressIndicator(color: Colors.black))
             : _matchedUsers.isEmpty
-                ? const Center(child: Text('No matched contacts'))
-                : ListView.builder(
-                    itemCount: _matchedUsers.length,
-                    itemBuilder: (context, index) {
-                      final user = _matchedUsers[index];
-                      final contact = user['contact'] as Contact;
-                      final userId = user['userId'] as String;
-                      final displayName = user['name'] as String;
-                      final profilePic = user['profilePic'] as String;
-                      final phone = user['phone'] as String;
-                      final email = user['email'] as String;
+            ? const Center(child: Text('No matched contacts'))
+            : ListView.builder(
+          itemCount: _matchedUsers.length,
+          itemBuilder: (context, index) {
+            final user = _matchedUsers[index];
+            final contact = user['contact'] as Contact;
+            final userId = user['userId'] as String;
+            final displayName = user['name'] as String;
+            final profilePic = user['profilePic'] as String;
+            final phone = user['phone'] as String;
+            final email = user['email'] as String;
 
-                      return ListTile(
-                        leading: profilePic.isNotEmpty
-                            ? CircleAvatar(
-                                backgroundImage: NetworkImage(profilePic),
-                              )
-                            : CircleAvatar(
-                                child: Text(displayName[0].toUpperCase()),
-                                backgroundColor: Colors.grey[300],
-                              ),
-                        title: Text(displayName),
-                        subtitle: Text('$phone\n$email'),
-                        onTap: () => _navigateToChatScreen(userId, displayName),
-                      );
-                    },
-                  ),
+            return ListTile(
+              leading: profilePic.isNotEmpty
+                  ? CircleAvatar(
+                backgroundImage: NetworkImage(profilePic),
+              )
+                  : CircleAvatar(
+                child: Text(displayName[0].toUpperCase()),
+                backgroundColor: Colors.grey[300],
+              ),
+              title: Text(displayName),
+              subtitle: Text('$phone\n$email'),
+              onTap: () => _navigateToChatScreen(userId, displayName),
+            );
+          },
+        ),
       ),
     );
   }

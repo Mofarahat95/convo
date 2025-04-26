@@ -202,6 +202,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 );
                 ref.read(chatsProvider.notifier).notify();
               },
+
             ),
             PopupMenuItem(
               padding: EdgeInsets.zero,

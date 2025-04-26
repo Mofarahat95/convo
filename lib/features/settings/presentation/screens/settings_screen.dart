@@ -41,14 +41,14 @@ class SettingsScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 40,
                       backgroundImage: AssetImage(
-                          ImageAssets.moImage), // Use your image here
+                          'assets/images/omar.png'), // Use your image here
                     ),
                     SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Mohamed Farahat',
+                          'Kero Emad',
                           style: quicksand18(color: AppColors.primary900),
                         ),
                         Text(

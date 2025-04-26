@@ -3,41 +3,24 @@ import 'package:flutter/material.dart';
 
 class CallHistory extends StatelessWidget {
   final List<Map<String, dynamic>> calls = [
+
+    {
+      'name': 'Mohamed Farahat',
+      'time': 'Today, 11:03 AM',
+      'avatar': 'assets/images/mo.png',
+      'isMissed': false,
+    },
+    {
+      'name': 'Mohamed Farahat',
+      'time': 'Today, 10:30 AM',
+      'avatar': 'assets/imagesmo.png',
+      'isMissed': false,
+    },
     {
       'name': 'Omar Ahmed',
-      'time': 'Today, 09:30 AM',
-      'avatar': 'assets/images/kero.png',
-      'isMissed': false,
-    },
-    {
-      'name': 'Kero Emad',
-      'time': 'Today, 07:30 AM',
-      'avatar': "assets/images/omar.png",
-      'isMissed': false,
-    },
-    {
-      'name': 'Kero Emad',
-      'time': 'Yesterday, 07:35 PM',
+      'time': 'Yesterday, 09:30 AM',
       'avatar': 'assets/images/omar.png',
       'isMissed': true,
-    },
-    {
-      'name': 'Omar Ahmed',
-      'time': 'Monday, 09:30 AM',
-      'avatar': 'assets/images/kero.png',
-      'isMissed': false,
-    },
-    {
-      'name': 'Omar Ahmed',
-      'time': '03/07/22, 07:30 AM',
-      'avatar': 'assets/images/kero.png',
-      'isMissed': false,
-    },
-    {
-      'name': 'Kero Emad',
-      'time': 'Monday, 09:30 AM',
-      'avatar': 'assets/images/omar.png',
-      'isMissed': false,
     },
   ];
 
