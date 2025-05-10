@@ -24,6 +24,7 @@ class LoginCubit extends Cubit<LoginStates> {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (credential.user!.emailVerified) {
+
         emit(LoginSuccessState());
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('isLoggedIn', true);

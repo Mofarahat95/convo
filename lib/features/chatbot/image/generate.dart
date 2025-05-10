@@ -1,8 +1,8 @@
 import "dart:io";
 import "dart:convert";
-import "package:convo/chatbot/config.dart";
-import "package:convo/chatbot/gen/l10n.dart";
-import "package:convo/chatbot/util.dart";
+import "package:convo/features/chatbot/config.dart";
+import "package:convo/features/chatbot/gen/l10n.dart";
+import "package:convo/features/chatbot/util.dart";
 import "package:http/http.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";

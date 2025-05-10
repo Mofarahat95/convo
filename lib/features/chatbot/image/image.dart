@@ -1,6 +1,6 @@
-import 'package:convo/chatbot/gen/l10n.dart';
-import 'package:convo/chatbot/image/config.dart';
-import 'package:convo/chatbot/image/generate.dart';
+import 'package:convo/features/chatbot/gen/l10n.dart';
+import 'package:convo/features/chatbot/image/config.dart';
+import 'package:convo/features/chatbot/image/generate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

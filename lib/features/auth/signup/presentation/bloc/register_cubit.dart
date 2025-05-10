@@ -24,12 +24,12 @@ class RegisterCubit extends Cubit<RegisterStates> {
         password: password,
       );
       UserModel userModel = UserModel(
-        email: email,
-        birthday: birthday,
-        id: credential.user!.uid,
-        name: name,
-        phone: phone,
-      );
+          email: email,
+          birthday: birthday,
+          id: credential.user!.uid,
+          name: name,
+          phone: phone,
+          profilePic: 'https://www.pngmart.com/files/23/Profile-PNG-Photo.png');
       credential.user?.sendEmailVerification();
       addUserToFireStore(userModel);
       emit(RegisterSuccessState());
@@ -45,7 +45,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .collection("Users")
         .withConverter<UserModel>(
       fromFirestore: (snapshot, _) {
-        return UserModel.formJson(snapshot.data()!);
+        return UserModel.fromJson(snapshot.data()!);
       },
       toFirestore: (user, _) {
         return user.toJson();
@@ -59,13 +59,11 @@ class RegisterCubit extends Cubit<RegisterStates> {
     user.id = docRef.id;
     docRef.set(user);
   }
+
   updateBirthDate(DateTime? birthday) {
-    if(birthday!=null){
+    if (birthday != null) {
       selectedBirthday = birthday;
       emit(BirthdayUpdateState());
     }
-
   }
 }
-
-

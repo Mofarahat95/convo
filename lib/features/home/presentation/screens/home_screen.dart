@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         selectedItemColor: Color(0xff24786D),
         unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             icon: Image.asset('assets/images/Message.png', width: 30),

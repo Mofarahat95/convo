@@ -1,12 +1,15 @@
+import 'package:convo/features/auth/signup/user_model.dart';
 import 'package:convo/features/calls/presentation/screens/vedio_call.dart';
 import 'package:convo/features/calls/presentation/screens/voice_call.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var user = GoRouterState.of(context).extra as UserModel;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -25,18 +28,18 @@ class UserProfileScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 50,
                     backgroundImage:
-                        AssetImage('assets/images/mo.png'), // ضع صورتك هنا
+                        NetworkImage(user.profilePic??""), // ضع صورتك هنا
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Mohamed Farahat',
+                    user.name ?? "",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'Flutter developer',
+                    'Web developer',
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                   SizedBox(height: 15),
@@ -61,9 +64,8 @@ class UserProfileScreen extends StatelessWidget {
                                 callid:
                                     "123456", // يجب تحديثها بناءً على الحالة
                                 userid:
-                                    "123", // يجب تحديثها بناءً على المستخدم الحالي
-                                otherUserId:
-                                    "456", // يجب تحديثها بناءً على المستخدم الآخر
+                                    '', // يجب تحديثها بناءً على المستخدم الحالي
+                                otherUserId: user.id ?? "",
                               ),
                             ),
                           );
@@ -120,17 +122,17 @@ class UserProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Display Name', style: TextStyle(color: Colors.grey)),
-                  Text('Mohamed Farahat',
+                  Text(user.name ?? "",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text('Email Address', style: TextStyle(color: Colors.grey)),
-                  Text('mofarahat88@gmail.com',
+                  Text(user.email ?? "",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   Text('Phone Number', style: TextStyle(color: Colors.grey)),
-                  Text('01022181170',
+                  Text(user.phone ?? "",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 20),

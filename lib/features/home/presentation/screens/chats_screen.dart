@@ -12,11 +12,11 @@ class ChatsScreen extends StatelessWidget {
 
   final List<Map<String, dynamic>> chats = [
     {
-      "name": "Mohamed Farahat",
-      "message": "How are you today?",
-      "time": "2 min ago",
+      "name": "Kero Emad",
+      "message": "hi?",
+      "time": "1 min ago",
       "unread": 0,
-      "avatar": "assets/images/mo.png"
+      "avatar": "assets/images/omar.png"
     },
   ];
 
@@ -58,7 +58,7 @@ class ChatsScreen extends StatelessWidget {
                   },
                   child: CircleAvatar(
                     radius: 18,
-                    backgroundImage: AssetImage("assets/images/omar.png"),
+                    backgroundImage: AssetImage("assets/images/mo.png"),
                   ),
                 ),
               ),
@@ -84,7 +84,7 @@ class ChatsScreen extends StatelessWidget {
                           alignment: Alignment.bottomRight,
                           children: [
                             CircleAvatar(
-                              backgroundImage: AssetImage("assets/images/omar.png"),
+                              backgroundImage: AssetImage("assets/images/mo.png"),
                               radius: 35,
                               backgroundColor: Colors.white,
                             ),

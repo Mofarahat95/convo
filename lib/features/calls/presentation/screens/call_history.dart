@@ -5,15 +5,15 @@ class CallHistory extends StatelessWidget {
   final List<Map<String, dynamic>> calls = [
 
     {
-      'name': 'Mohamed Farahat',
+      'name': 'Kero Emad',
       'time': 'Today, 11:03 AM',
-      'avatar': 'assets/images/mo.png',
+      'avatar': 'assets/images/omar.png',
       'isMissed': false,
     },
     {
-      'name': 'Mohamed Farahat',
+      'name': 'Kero Emad',
       'time': 'Today, 10:30 AM',
-      'avatar': 'assets/imagesmo.png',
+      'avatar': 'assets/images/omar.png',
       'isMissed': false,
     },
     {

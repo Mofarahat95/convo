@@ -15,7 +15,7 @@
 
 
 import 'dart:io';
-import 'package:convo/chatbot/config.dart';
+import 'package:convo/features/chatbot/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

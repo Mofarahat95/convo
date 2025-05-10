@@ -1,10 +1,10 @@
 
-import "package:convo/chatbot/config.dart";
-import "package:convo/chatbot/gen/l10n.dart";
-import "package:convo/chatbot/util.dart";
+import "package:convo/features/chatbot/gen/l10n.dart";
+import "package:convo/features/chatbot/util.dart";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
+import "../config.dart";
 import "../settings/api.dart";
 
 class ConfigTab extends ConsumerStatefulWidget {

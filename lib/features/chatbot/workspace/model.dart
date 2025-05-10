@@ -1,4 +1,4 @@
-import "package:convo/chatbot/config.dart";
+import "package:convo/features/chatbot/config.dart";
 
 import "../util.dart";
 import "../gen/l10n.dart";
