@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'features/chatbot/config.dart' show Config;
+import 'features/home/presentation/bloc/home_cubit.dart' show HomeCubit;
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -13,10 +14,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Config.init().then((_) => runApp(ProviderScope(child: BlocProvider(
-    create: (context) => LoginCubit(),
-    child: Convo(),
-  ))));
+  Config.init().then((_) => runApp(ProviderScope(
+          child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => LoginCubit()),
+          BlocProvider(create: (context) => HomeCubit()), // ✅ أضف ده
+        ],
+        child:const Convo(),
+      ))));
 }
 
 class Convo extends StatelessWidget {

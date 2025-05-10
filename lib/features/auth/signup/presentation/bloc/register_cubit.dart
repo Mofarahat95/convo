@@ -55,8 +55,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
   Future<void> addUserToFireStore(UserModel user) async {
     var collection = getUserCollection();
-    var docRef = collection.doc();
-    user.id = docRef.id;
+    var docRef = collection.doc(user.id);
     docRef.set(user);
   }
 
