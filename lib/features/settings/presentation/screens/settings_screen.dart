@@ -41,7 +41,7 @@ class SettingsScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 40,
                       backgroundImage: AssetImage(
-                          ImageAssets.moImage), // Use your image here
+                          'assets/images/mo.png'), // Use your image here
                     ),
                     SizedBox(width: 20),
                     Column(

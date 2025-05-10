@@ -13,24 +13,14 @@ class ChatsScreen extends StatelessWidget {
   final List<Map<String, dynamic>> chats = [
     {
       "name": "Kero Emad",
-      "message": "How are you today?",
-      "time": "2 min ago",
+      "message": "hi?",
+      "time": "1 min ago",
       "unread": 0,
       "avatar": "assets/images/omar.png"
     },
-    {
-      "name": "Omar Ahmed",
-      "message": "Don't miss to attend the meeting.",
-      "time": "2 min ago",
-      "unread": 0,
-      "avatar": "assets/images/kero.png"
-    },
   ];
 
-  final List<Map<String, String>> statusList = [
-    {"name": "Omar", "avatar": "assets/images/kero.png"},
-    {"name": "Kero", "avatar": "assets/images/omar.png"},
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +54,11 @@ class ChatsScreen extends StatelessWidget {
                 },
                 child: InkWell(
                   onTap: () {
-                    GoRouter.of(context).push(AppRoutes.profileRoute);
+                    GoRouter.of(context).push(AppRoutes.settingsRoute);
                   },
                   child: CircleAvatar(
                     radius: 18,
-                    backgroundImage: AssetImage(ImageAssets.moImage),
+                    backgroundImage: AssetImage("assets/images/mo.png"),
                   ),
                 ),
               ),
@@ -94,7 +84,7 @@ class ChatsScreen extends StatelessWidget {
                           alignment: Alignment.bottomRight,
                           children: [
                             CircleAvatar(
-                              backgroundImage: AssetImage(ImageAssets.moImage),
+                              backgroundImage: AssetImage("assets/images/mo.png"),
                               radius: 35,
                               backgroundColor: Colors.white,
                             ),
@@ -107,34 +97,34 @@ class ChatsScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(
-                          height: 2,
+                          height: 3,
                         ),
                         Text("My status",
                             style: TextStyle(color: Colors.white)),
                       ],
                     ),
                   ),
-                  ...statusList.map((status) => Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.green, width: 3),
-                              ),
-                              child: CircleAvatar(
-                                radius: 35,
-                                backgroundImage: AssetImage(status['avatar']!),
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(status['name']!,
-                                style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                      )),
+                  // ...statusList.map((status) => Padding(
+                  //       padding: EdgeInsets.all(8.0),
+                  //       child: Column(
+                  //         children: [
+                  //           Container(
+                  //             decoration: BoxDecoration(
+                  //               shape: BoxShape.circle,
+                  //               border:
+                  //                   Border.all(color: Colors.green, width: 3),
+                  //             ),
+                  //             child: CircleAvatar(
+                  //               radius: 35,
+                  //               backgroundImage: AssetImage(status['avatar']!),
+                  //             ),
+                  //           ),
+                  //           SizedBox(height: 5),
+                  //           Text(status['name']!,
+                  //               style: TextStyle(color: Colors.white)),
+                  //         ],
+                  //       ),
+                  //     )),
                 ],
               ),
             ),
@@ -194,7 +184,7 @@ class ChatsScreen extends StatelessWidget {
                     right: 20,
                     child: GestureDetector(
                       onTap: () {
-                        GoRouter.of(context).push(AppRoutes.chatBotRoute);
+                        GoRouter.of(context).push(AppRoutes.insidechatRoute);
                       },
                       child: Image.asset(
                         'assets/images/chat_bot.png',

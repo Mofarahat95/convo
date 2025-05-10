@@ -3,10 +3,15 @@ import 'package:convo/features/auth/login/presentation/screens/resetPass_screen.
 import 'package:convo/features/auth/login/presentation/screens/login_screen.dart';
 import 'package:convo/features/auth/login/presentation/screens/success_screen.dart';
 import 'package:convo/features/auth/signup/presentation/screens/register_screen.dart';
+import 'package:convo/features/bot/presentation/screens/chat_bot.dart';
 import 'package:convo/features/chat/presentation/screens/chat_screens.dart';
-import 'package:convo/features/chat_bot/presentation/screens/chat_bot.dart';
+import 'package:convo/features/chatbot/chat/chat.dart';
+import 'package:convo/features/chatbot/image/image.dart';
+import 'package:convo/features/chatbot/settings/settings.dart';
+import 'package:convo/features/chatbot/workspace/workspace.dart';
 import 'package:convo/features/contacts/presentation/contact_screen.dart';
 import 'package:convo/features/home/presentation/screens/home_screen.dart';
+import 'package:convo/features/settings/presentation/screens/settings_screen.dart';
 import 'package:convo/features/splash/presentation/screens/welcome_screen.dart';
 import 'package:convo/features/splash/presentation/screens/splash_screen.dart';
 import 'package:convo/features/user_profile/screens/user_profile.dart';
@@ -58,6 +63,26 @@ abstract class RoutesManager {
       GoRoute(
         path: AppRoutes.profileRoute,
         builder: (context, state) => UserProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.settingsRoute,
+        builder: (context, state) => SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.imageRoute,
+        builder: (context, state) => ImagePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.workSpaceRoute,
+        builder: (context, state) => WorkspacePage(),
+      ),
+      GoRoute(
+        path: AppRoutes.chatbotSettingsRoute,
+        builder: (context, state) => SettingsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.insidechatRoute,
+        builder: (context, state) => ChatPage(),
       ),
     ],
   );
