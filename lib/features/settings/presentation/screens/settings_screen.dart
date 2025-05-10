@@ -3,6 +3,7 @@ import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/core/utils/colors_manager.dart';
 import 'package:convo/core/utils/styles_manager.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_cubit.dart';
+import 'package:convo/features/home/presentation/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,15 +41,15 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      backgroundImage: AssetImage(
-                          'assets/images/mo.png'), // Use your image here
+                      backgroundImage: NetworkImage(
+                          HomeCubit.get(context).currentUser!.profilePic), // Use your image here
                     ),
                     SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Mohamed Farahat',
+                          HomeCubit.get(context).currentUser!.name ,
                           style: quicksand18(color: AppColors.primary900),
                         ),
                         Text(
