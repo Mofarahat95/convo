@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:convo/features/chat/presentation/bloc/chat_states.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatCubit extends Cubit<ChatStates> {
   ChatCubit() : super(ChatInitialState());
@@ -93,5 +97,27 @@ class ChatCubit extends Cubit<ChatStates> {
     } catch (e) {
       emit(ChatErrorState(e.toString()));
     }
+  }
+
+  //share media
+  Future<void> pickAndUploadImage({
+    required String chatId,
+    required String senderId,
+    required String receiverId,
+    required Function(String imageUrl) onUploaded,
+  }) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    final file = File(pickedFile.path);
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final ref = FirebaseStorage.instance.ref().child('chat_images/$fileName.jpg');
+
+    final uploadTask = await ref.putFile(file);
+    final imageUrl = await ref.getDownloadURL();
+
+    onUploaded(imageUrl); // رجّع اللينك بعد الرفع
   }
 }

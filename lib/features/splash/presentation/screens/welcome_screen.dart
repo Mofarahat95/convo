@@ -31,12 +31,7 @@ class onBoardingScreen extends StatelessWidget {
               style: quicksand35(color: AppColors.primary950),
             ),
             const SizedBox(height: 5),
-            Text(
-             AppStrings.welcomeDescription,
-              textAlign: TextAlign.center,
-              style: quicksand18(),
-            ),
-            const SizedBox(height: 40),
+
             ElevatedButton(
               onPressed: () {
                 GoRouter.of(context).push(AppRoutes.loginRoute);

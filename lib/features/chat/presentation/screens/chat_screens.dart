@@ -7,6 +7,8 @@ import 'package:convo/features/home/presentation/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -42,7 +44,8 @@ class _ChatScreenState extends State<ChatScreen> {
             Stack(
               children: [
                 InkWell(
-                  onTap: () => GoRouter.of(context).push('/profile', extra: otherUser),
+                  onTap: () =>
+                      GoRouter.of(context).push('/profile', extra: otherUser),
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(otherUser.profilePic ?? ""),
                   ),
@@ -67,13 +70,17 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(otherUser.name, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
-                  const Text("Active now", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  Text(otherUser.name,
+                      style: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w600)),
+                  const Text("Active now",
+                      style: TextStyle(color: Colors.grey, fontSize: 12)),
                 ],
               ),
             ),
             IconButton(
-              icon: Image.asset('assets/images/Call.png', width: 30, height: 30),
+              icon:
+                  Image.asset('assets/images/Call.png', width: 30, height: 30),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ZimVoiceCall(
@@ -85,7 +92,8 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
             IconButton(
-              icon: Image.asset('assets/images/Video.png', width: 30, height: 30),
+              icon:
+                  Image.asset('assets/images/Video.png', width: 30, height: 30),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ZegoVideoCall(
@@ -106,7 +114,8 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: stream,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
@@ -127,22 +136,38 @@ class _ChatScreenState extends State<ChatScreen> {
                     final isMe = message['senderId'] == currentUser.id;
                     String messageId = message.id;
                     return Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Container(
-                          margin: EdgeInsets.only(left: isMe ? 50 : 0, right: isMe ? 0 : 50),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          margin: EdgeInsets.only(
+                              left: isMe ? 50 : 0, right: isMe ? 0 : 50),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
-                            color: isMe ? const Color(0xff44E18A) : const Color(0xffF2F7FB),
+                            color: isMe
+                                ? const Color(0xff44E18A)
+                                : const Color(0xffF2F7FB),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Column(
-                            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            crossAxisAlignment: isMe
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
                             children: [
-                              Text(message['message'], style: TextStyle(color: isMe ? Colors.white : Colors.black)),
+                              Text(message['message'],
+                                  style: TextStyle(
+                                      color:
+                                          isMe ? Colors.white : Colors.black)),
                               const SizedBox(height: 3),
-                              Text(message['timestamp'].toDate().toString().substring(11, 16), style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                              Text(
+                                  message['timestamp']
+                                      .toDate()
+                                      .toString()
+                                      .substring(11, 16),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 12)),
                             ],
                           ),
                         ),
@@ -158,11 +183,30 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Colors.white,
             child: Row(
               children: [
-                IconButton(icon: const Icon(Icons.attach_file), onPressed: () {}),
+                IconButton(
+                  icon: Icon(Icons.attach_file),
+                  onPressed: () async {
+                    await chatCubit.pickAndUploadImage(
+                      chatId: chatId,
+                      senderId: currentUser.id,
+                      receiverId: otherUser.id,
+                      onUploaded: (imageUrl) {
+                        chatCubit.sendMessage(
+                          chatId: chatId,
+                          senderId: currentUser.id,
+                          receiverId: otherUser.id,
+                          messageText: imageUrl, // هنا تبعت اللينك كرسالة
+                        );
+                      },
+                    );
+                  },
+                ),
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(hintText: "Write your message", border: InputBorder.none),
+                    decoration: const InputDecoration(
+                        hintText: "Write your message",
+                        border: InputBorder.none),
                     onChanged: (val) => editedMessageText = val,
                   ),
                 ),
@@ -171,7 +215,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   onPressed: () {
                     if (editedMessageText.trim().isEmpty) return;
                     if (editingMessageId != null) {
-                      chatCubit.editMessage(chatId, editingMessageId!, editedMessageText);
+                      chatCubit.editMessage(
+                          chatId, editingMessageId!, editedMessageText);
                     } else {
                       chatCubit.sendMessage(
                         chatId: chatId,
