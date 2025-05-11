@@ -6,48 +6,31 @@ import 'package:convo/features/chat/presentation/bloc/chat_cubit.dart';
 import 'package:convo/features/home/presentation/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   String? editingMessageId;
   String editedMessageText = '';
-  late String chatId;
-  late UserModel otherUser;
-  late ChatCubit chatCubit;
-  late String currentUserId;
-  Stream<QuerySnapshot>? _stream;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final currentUser = HomeCubit.get(context).currentUser;
-      if (currentUser == null) return;
-      chatCubit = ChatCubit.get(context);
-      otherUser = GoRouterState.of(context).extra as UserModel;
-      currentUserId = currentUser.id;
-      chatId = chatCubit.generateChatId(currentUserId, otherUser.id);
-      setState(() {
-        _stream = chatCubit.listenToMessages(chatId);
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final otherUser = GoRouterState.of(context).extra as UserModel;
     final currentUser = HomeCubit.get(context).currentUser;
-    if (currentUser == null || _stream == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+    if (currentUser == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    final chatCubit = ChatCubit.get(context);
+    final chatId = chatCubit.generateChatId(currentUser.id, otherUser.id);
+    final stream = chatCubit.listenToMessages(chatId);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -92,29 +75,25 @@ class _ChatScreenState extends State<ChatScreen> {
             IconButton(
               icon: Image.asset('assets/images/Call.png', width: 30, height: 30),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ZimVoiceCall(
-                      callid: "123456",
-                      userid: currentUserId,
-                      otherUserId: otherUser.id,
-                    ),
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ZimVoiceCall(
+                    callid: "1",
+                    userid: currentUser.id,
+                    otherUserId: otherUser.id,
                   ),
-                );
+                ));
               },
             ),
             IconButton(
               icon: Image.asset('assets/images/Video.png', width: 30, height: 30),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ZegoVideoCall(
-                      callid: "123456",
-                      userid: currentUserId,
-                      otherUserId: otherUser.id,
-                    ),
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ZegoVideoCall(
+                    callid: "1",
+                    userid: currentUser.id,
+                    otherUserId: otherUser.id,
                   ),
-                );
+                ));
               },
             ),
             const SizedBox(width: 10)
@@ -125,7 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _stream,
+              stream: stream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
@@ -147,125 +126,69 @@ class _ChatScreenState extends State<ChatScreen> {
                     final message = messages[index];
                     final isMe = message['senderId'] == currentUser.id;
                     String messageId = message.id;
-                    return _buildMessageBubble(
-                      message['message'],
-                      isMe,
-                      message['timestamp'].toDate().toString().substring(11, 16),
-                      messageId,
-                      chatId,
-                      otherUser.profilePic ?? "",
-                      chatCubit,
+                    return Align(
+                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          margin: EdgeInsets.only(left: isMe ? 50 : 0, right: isMe ? 0 : 50),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: isMe ? const Color(0xff44E18A) : const Color(0xffF2F7FB),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            children: [
+                              Text(message['message'], style: TextStyle(color: isMe ? Colors.white : Colors.black)),
+                              const SizedBox(height: 3),
+                              Text(message['timestamp'].toDate().toString().substring(11, 16), style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                      ),
                     );
                   },
                 );
               },
             ),
           ),
-          _buildMessageInput(chatId, currentUser.id, otherUser.id, chatCubit),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageBubble(String message, bool isMe, String time, String messageId, String chatId, String userPic, ChatCubit chatCubit) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: GestureDetector(
-        onLongPress: () => _showOptions(messageId, chatId, message, isMe, chatCubit),
-        child: Row(
-          mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-          children: [
-            if (!isMe)
-              CircleAvatar(backgroundImage: NetworkImage(userPic), radius: 18),
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            color: Colors.white,
+            child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isMe ? const Color(0xff44E18A) : const Color(0xffF2F7FB),
-                    borderRadius: BorderRadius.circular(20),
+                IconButton(icon: const Icon(Icons.attach_file), onPressed: () {}),
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(hintText: "Write your message", border: InputBorder.none),
+                    onChanged: (val) => editedMessageText = val,
                   ),
-                  child: Text(message, style: TextStyle(color: isMe ? Colors.white : Colors.black)),
                 ),
-                const SizedBox(height: 3),
-                Text(time, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: () {
+                    if (editedMessageText.trim().isEmpty) return;
+                    if (editingMessageId != null) {
+                      chatCubit.editMessage(chatId, editingMessageId!, editedMessageText);
+                    } else {
+                      chatCubit.sendMessage(
+                        chatId: chatId,
+                        senderId: currentUser.id,
+                        receiverId: otherUser.id,
+                        messageText: editedMessageText,
+                      );
+                    }
+                    _controller.clear();
+                    setState(() {
+                      editingMessageId = null;
+                      editedMessageText = '';
+                    });
+                  },
+                )
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showOptions(String messageId, String chatId, String oldMessage, bool isMe, ChatCubit chatCubit) {
-    if (isMe) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Message Options'),
-          content: const Text('Would you like to delete or edit this message?'),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-            TextButton(
-              onPressed: () {
-                chatCubit.deleteMessage(chatId, messageId);
-                Navigator.pop(ctx);
-              },
-              child: const Text('Delete'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  editedMessageText = oldMessage;
-                  editingMessageId = messageId;
-                });
-                Navigator.pop(ctx);
-              },
-              child: const Text('Edit'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Widget _buildMessageInput(String chatId, String senderId, String receiverId, ChatCubit chatCubit) {
-    _controller.text = editedMessageText;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: Colors.white,
-      child: Row(
-        children: [
-          IconButton(icon: const Icon(Icons.attach_file), onPressed: () {}),
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: "Write your message", border: InputBorder.none),
-              onChanged: (val) => editedMessageText = val,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              if (editedMessageText.trim().isEmpty) return;
-              if (editingMessageId != null) {
-                chatCubit.editMessage(chatId, editingMessageId!, editedMessageText);
-              } else {
-                chatCubit.sendMessage(
-                  chatId: chatId,
-                  senderId: senderId,
-                  receiverId: receiverId,
-                  messageText: editedMessageText,
-                );
-              }
-              _controller.clear();
-              setState(() {
-                editingMessageId = null;
-                editedMessageText = '';
-              });
-            },
           )
         ],
       ),

@@ -11,14 +11,18 @@ class HomeCubit extends Cubit<HomeStates> {
 
   UserModel? currentUser;
   List<String> chatIds = [];
-  Map<String, UserModel> chatPartners = {};// الطرف التاني من كل شات
+  Map<String, UserModel> chatPartners = {}; // الطرف التاني من كل شات
 
   Future<void> getCurrentUser() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception("User not signed in");
 
-      final doc = await FirebaseFirestore.instance.collection('Users').doc(user.uid).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .get();
+
       if (doc.exists) {
         currentUser = UserModel.fromJson(doc.data()!..addAll({'id': user.uid}));
         emit(HomeUserLoadedState(currentUser!));
@@ -36,12 +40,20 @@ class HomeCubit extends Cubit<HomeStates> {
   Future<void> getUserChats() async {
     try {
       final uid = currentUser!.id;
-      final snapshot = await FirebaseFirestore.instance.collection('chats').get();
+      final snapshot =
+      await FirebaseFirestore.instance.collection('chats').get();
 
-      chatIds = snapshot.docs
-          .map((doc) => doc.id)
-          .where((id) => id.contains(uid))
-          .toList();
+      chatIds.clear();
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final sender = data['senderId'];
+        final receiver = data['receiverId'];
+
+        if (sender == uid || receiver == uid) {
+          chatIds.add(doc.id);
+        }
+      }
 
       await getChatPartners();
     } catch (e) {
@@ -49,15 +61,18 @@ class HomeCubit extends Cubit<HomeStates> {
     }
   }
 
-
   Future<void> getChatPartners() async {
     final uid = currentUser!.id;
     for (var chatId in chatIds) {
       final otherUid = extractOtherUserId(chatId, uid);
       if (!chatPartners.containsKey(otherUid)) {
-        final doc = await FirebaseFirestore.instance.collection('Users').doc(otherUid).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(otherUid)
+            .get();
         if (doc.exists) {
-          chatPartners[otherUid] = UserModel.fromJson(doc.data()!..addAll({'id': otherUid}));
+          chatPartners[otherUid] =
+              UserModel.fromJson(doc.data()!..addAll({'id': otherUid}));
         }
       }
     }
@@ -68,8 +83,4 @@ class HomeCubit extends Cubit<HomeStates> {
     List<String> parts = chatId.split('_');
     return parts.first == currentUserId ? parts.last : parts.first;
   }
-
-
 }
-
-// Create state class for loaded chats

@@ -207,33 +207,48 @@ class _ContactsScreenState extends State<ContactsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Colors.black))
+            child: CircularProgressIndicator(color: Colors.black))
             : _matchedUsers.isEmpty
-                ? const Center(child: Text('No matched contacts'))
-                : ListView.builder(
-                    itemCount: _matchedUsers.length,
-                    itemBuilder: (context, index) {
-                      //take ont from the matched users as map
-                      final result = _matchedUsers[index];
-                      //convert the map to user model object
-                      UserModel user = UserModel.fromJson(result);
-                      return ListTile(
-                          leading: user.profilePic.isNotEmpty
-                              ? CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(user.profilePic),
-                                )
-                              : CircleAvatar(
-                                  child: Text(user.name[0].toUpperCase()),
-                                  backgroundColor: Colors.grey[300],
-                                ),
-                          title: Text(user.name),
-                          subtitle: Text('${user.phone}'),
-                          onTap: () => GoRouter.of(context)
-                              .push(AppRoutes.chatRoute, extra: user));
-                    },
-                  ),
+            ? const Center(child: Text('No matched contacts'))
+            : ListView.builder(
+          itemCount: _matchedUsers.length,
+          itemBuilder: (context, index) {
+            // Take one from the matched users as map
+            final result = _matchedUsers[index];
+
+            // Extract only user-related fields to avoid passing unnecessary keys
+            Map<String, dynamic> userJson = {
+              'id': result['userId'],
+              'name': result['name'],
+              'profilePic': result['profilePic'],
+              'phonenumber': result['phone'],
+              'email': result['email'],
+            };
+
+            // Convert the map to user model object
+            UserModel user = UserModel.fromJson(userJson);
+
+            return ListTile(
+              leading: user.profilePic.isNotEmpty
+                  ? CircleAvatar(
+                backgroundImage: NetworkImage(user.profilePic),
+              )
+                  : CircleAvatar(
+                child: Text(user.name[0].toUpperCase()),
+                backgroundColor: Colors.grey[300],
+              ),
+              title: Text(user.name),
+              subtitle: Text('${user.phone}'),
+              onTap: () {
+                GoRouter.of(context)
+                    .push(AppRoutes.chatRoute, extra: user);
+                print("${user.phone}");
+              },
+            );
+          },
+        ),
       ),
     );
   }
+
 }
