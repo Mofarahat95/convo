@@ -1,8 +1,9 @@
-// 📁 chat_cubit.dart
 import 'dart:io';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'chat_states.dart';
 
@@ -15,8 +16,8 @@ class ChatCubit extends Cubit<ChatStates> {
 
   String generateChatId(String userId1, String userId2) {
     return userId1.hashCode <= userId2.hashCode
-        ? '{userId1}_$userId2'
-        : '{userId2}_$userId1';
+        ? '${userId1}_$userId2'
+        : '${userId2}_$userId1';
   }
 
   Stream<QuerySnapshot> listenToMessages(String chatId) {
@@ -79,7 +80,13 @@ class ChatCubit extends Cubit<ChatStates> {
       final uploadTask = await ref.putFile(file);
       final imageUrl = await ref.getDownloadURL();
 
-      onUploaded(imageUrl);
+      final isSafe = await checkImageSafeContent(imageUrl);
+
+      if (isSafe) {
+        onUploaded(imageUrl);
+      } else {
+        emit(ChatErrorState("Image may contain sensitive content and was not sent."));
+      }
     } catch (e) {
       emit(ChatErrorState(e.toString()));
     }
@@ -88,4 +95,64 @@ class ChatCubit extends Cubit<ChatStates> {
   bool isImageMessage(String message) {
     return message.startsWith('https://') && message.contains('firebase');
   }
-} // END
+
+  final String apiKey = 'AIzaSyBgfY2Gv-AHExgm9S-y_EDUGN4r66wYB2I';
+
+  Future<bool> checkImageSafeContent(String imageUrl) async {
+    final url = Uri.parse('https://vision.googleapis.com/v1/images:annotate?key=$apiKey');
+
+    final body = {
+      "requests": [
+        {
+          "image": {
+            "source": {
+              "imageUri": imageUrl
+            }
+          },
+          "features": [
+            {
+              "type": "SAFE_SEARCH_DETECTION"
+            }
+          ]
+        }
+      ]
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final safeSearch = data['responses'][0]['safeSearchAnnotation'];
+
+        if (safeSearch != null) {
+          final likelihoods = [
+            safeSearch['adult'],
+            safeSearch['spoof'],
+            safeSearch['medical'],
+            safeSearch['violence'],
+            safeSearch['racy'],
+          ];
+
+          for (var likelihood in likelihoods) {
+            if (['POSSIBLE', 'LIKELY', 'VERY_LIKELY'].contains(likelihood)) {
+              return false;
+            }
+          }
+        }
+
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+}
