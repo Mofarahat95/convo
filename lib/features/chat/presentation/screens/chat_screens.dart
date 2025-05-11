@@ -1,14 +1,13 @@
+// 📁 chat_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convo/features/auth/signup/user_model.dart';
-import 'package:convo/features/calls/presentation/screens/vedio_call.dart';
-import 'package:convo/features/calls/presentation/screens/voice_call.dart';
 import 'package:convo/features/chat/presentation/bloc/chat_cubit.dart';
+import 'package:convo/features/chat/presentation/bloc/chat_states.dart';
 import 'package:convo/features/home/presentation/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -41,29 +40,8 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0,
         title: Row(
           children: [
-            Stack(
-              children: [
-                InkWell(
-                  onTap: () =>
-                      GoRouter.of(context).push('/profile', extra: otherUser),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(otherUser.profilePic ?? ""),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                  ),
-                ),
-              ],
+            CircleAvatar(
+              backgroundImage: NetworkImage(otherUser.profilePic ?? ""),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -71,40 +49,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(otherUser.name,
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w600)),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   const Text("Active now",
                       style: TextStyle(color: Colors.grey, fontSize: 12)),
                 ],
               ),
             ),
-            IconButton(
-              icon:
-                  Image.asset('assets/images/Call.png', width: 30, height: 30),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ZimVoiceCall(
-                    callid: "1",
-                    userid: currentUser.id,
-                    otherUserId: otherUser.id,
-                  ),
-                ));
-              },
-            ),
-            IconButton(
-              icon:
-                  Image.asset('assets/images/Video.png', width: 30, height: 30),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ZegoVideoCall(
-                    callid: "1",
-                    userid: currentUser.id,
-                    otherUserId: otherUser.id,
-                  ),
-                ));
-              },
-            ),
-            const SizedBox(width: 10)
           ],
         ),
       ),
@@ -114,62 +64,51 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: stream,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    !snapshot.hasData) {
+                if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasError) {
-                  return Center(child: Text("⚠️ Error: ${snapshot.error}"));
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No messages yet."));
-                }
-
                 final messages = snapshot.data!.docs;
-
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (ctx, index) {
-                    final message = messages[index];
-                    final isMe = message['senderId'] == currentUser.id;
-                    String messageId = message.id;
+                    final msg = messages[index];
+                    final isMe = msg['senderId'] == currentUser.id;
                     return Align(
                       alignment:
                           isMe ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: isMe ? 50 : 0, right: isMe ? 0 : 50),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: isMe
-                                ? const Color(0xff44E18A)
-                                : const Color(0xffF2F7FB),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: isMe
-                                ? CrossAxisAlignment.end
-                                : CrossAxisAlignment.start,
-                            children: [
-                              Text(message['message'],
-                                  style: TextStyle(
-                                      color:
-                                          isMe ? Colors.white : Colors.black)),
-                              const SizedBox(height: 3),
-                              Text(
-                                  message['timestamp']
-                                      .toDate()
-                                      .toString()
-                                      .substring(11, 16),
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 12)),
-                            ],
-                          ),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isMe ? Colors.green[300] : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            chatCubit.isImageMessage(msg['message'])
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      msg['message'],
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Text(msg['message']),
+                            const SizedBox(height: 4),
+                            Text(
+                              msg['timestamp']
+                                  .toDate()
+                                  .toString()
+                                  .substring(11, 16),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
+                            )
+                          ],
                         ),
                       ),
                     );
@@ -178,65 +117,113 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            color: Colors.white,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.attach_file),
-                  onPressed: () async {
-                    await chatCubit.pickAndUploadImage(
-                      chatId: chatId,
-                      senderId: currentUser.id,
-                      receiverId: otherUser.id,
-                      onUploaded: (imageUrl) {
-                        chatCubit.sendMessage(
-                          chatId: chatId,
-                          senderId: currentUser.id,
-                          receiverId: otherUser.id,
-                          messageText: imageUrl, // هنا تبعت اللينك كرسالة
-                        );
-                      },
-                    );
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                        hintText: "Write your message",
-                        border: InputBorder.none),
-                    onChanged: (val) => editedMessageText = val,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    if (editedMessageText.trim().isEmpty) return;
-                    if (editingMessageId != null) {
-                      chatCubit.editMessage(
-                          chatId, editingMessageId!, editedMessageText);
-                    } else {
-                      chatCubit.sendMessage(
-                        chatId: chatId,
-                        senderId: currentUser.id,
-                        receiverId: otherUser.id,
-                        messageText: editedMessageText,
-                      );
-                    }
-                    _controller.clear();
-                    setState(() {
-                      editingMessageId = null;
-                      editedMessageText = '';
-                    });
-                  },
-                )
-              ],
-            ),
-          )
+          _buildBottomInput(context, chatId, currentUser.id, otherUser.id),
         ],
       ),
+    );
+  }
+
+  Widget _buildBottomInput(
+      BuildContext context, String chatId, String senderId, String receiverId) {
+    final chatCubit = ChatCubit.get(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.attach_file),
+            onPressed: () =>
+                _openAttachmentOptions(context, chatId, senderId, receiverId),
+          ),
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                  hintText: "Write your message", border: InputBorder.none),
+              onChanged: (val) => editedMessageText = val,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () {
+              if (editedMessageText.trim().isEmpty) return;
+              chatCubit.sendMessage(
+                chatId: chatId,
+                senderId: senderId,
+                receiverId: receiverId,
+                messageText: editedMessageText,
+              );
+              _controller.clear();
+              setState(() => editedMessageText = '');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openAttachmentOptions(
+      BuildContext context, String chatId, String senderId, String receiverId) {
+    final chatCubit = ChatCubit.get(context);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _attachmentItem(Icons.camera_alt, "Camera", () async {
+            Navigator.pop(context);
+            await chatCubit.pickAndUploadImage(
+              chatId: chatId,
+              senderId: senderId,
+              receiverId: receiverId,
+              source: ImageSource.camera,
+              onUploaded: (url) {
+                chatCubit.sendMessage(
+                  chatId: chatId,
+                  senderId: senderId,
+                  receiverId: receiverId,
+                  messageText: url,
+                );
+              },
+            );
+          }),
+          _attachmentItem(Icons.photo, "Media", () async {
+            Navigator.pop(context);
+            await chatCubit.pickAndUploadImage(
+              chatId: chatId,
+              senderId: senderId,
+              receiverId: receiverId,
+              source: ImageSource.gallery,
+              onUploaded: (url) {
+                chatCubit.sendMessage(
+                  chatId: chatId,
+                  senderId: senderId,
+                  receiverId: receiverId,
+                  messageText: url,
+                );
+              },
+            );
+          }),
+          _attachmentItem(Icons.insert_drive_file, "Documents",
+              () => Navigator.pop(context)),
+          _attachmentItem(
+              Icons.contacts, "Contact", () => Navigator.pop(context)),
+        ],
+      ),
+    );
+  }
+
+  Widget _attachmentItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: CircleAvatar(
+          backgroundColor: Colors.grey.shade200, child: Icon(icon)),
+      title: Text(title),
+      onTap: onTap,
     );
   }
 }
