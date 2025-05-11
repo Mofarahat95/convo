@@ -1,3 +1,4 @@
+// chat_cubit.dart
 import 'dart:io';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +12,6 @@ class ChatCubit extends Cubit<ChatStates> {
   ChatCubit() : super(ChatInitialState());
 
   static ChatCubit get(context) => BlocProvider.of(context);
-
   Stream<QuerySnapshot>? _cachedStream;
 
   String generateChatId(String userId1, String userId2) {
@@ -35,6 +35,7 @@ class ChatCubit extends Cubit<ChatStates> {
     required String senderId,
     required String receiverId,
     required String messageText,
+    bool isSensitive = false,
   }) async {
     try {
       final chatRef = FirebaseFirestore.instance.collection('chats').doc(chatId);
@@ -52,6 +53,7 @@ class ChatCubit extends Cubit<ChatStates> {
         'receiverId': receiverId,
         'message': messageText,
         'timestamp': FieldValue.serverTimestamp(),
+        'sensitive': isSensitive,
       });
 
       emit(ChatMessageSentState());
@@ -59,34 +61,29 @@ class ChatCubit extends Cubit<ChatStates> {
       emit(ChatErrorState(e.toString()));
     }
   }
-
+//share media
   Future<void> pickAndUploadImage({
     required String chatId,
     required String senderId,
     required String receiverId,
-    required Function(String imageUrl) onUploaded,
+    required Function(String imageUrl, bool isSensitive) onUploaded,
     ImageSource source = ImageSource.gallery,
   }) async {
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: source);
-
       if (pickedFile == null) return;
-
       final file = File(pickedFile.path);
       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
       final ref = FirebaseStorage.instance.ref().child('chat_images/$fileName.jpg');
 
-      final uploadTask = await ref.putFile(file);
+      await ref.putFile(file);
       final imageUrl = await ref.getDownloadURL();
 
       final isSafe = await checkImageSafeContent(imageUrl);
+      final isSensitive = !isSafe;
 
-      if (isSafe) {
-        onUploaded(imageUrl);
-      } else {
-        emit(ChatErrorState("Image may contain sensitive content and was not sent."));
-      }
+      onUploaded(imageUrl, isSensitive);
     } catch (e) {
       emit(ChatErrorState(e.toString()));
     }
@@ -97,33 +94,21 @@ class ChatCubit extends Cubit<ChatStates> {
   }
 
   final String apiKey = 'AIzaSyBgfY2Gv-AHExgm9S-y_EDUGN4r66wYB2I';
-
   Future<bool> checkImageSafeContent(String imageUrl) async {
     final url = Uri.parse('https://vision.googleapis.com/v1/images:annotate?key=$apiKey');
 
     final body = {
-      "requests": [
-        {
-          "image": {
-            "source": {
-              "imageUri": imageUrl
-            }
-          },
+      "requests": [{
+          "image": {"source": {"imageUri": imageUrl}},
           "features": [
-            {
-              "type": "SAFE_SEARCH_DETECTION"
-            }
+            {"type": "SAFE_SEARCH_DETECTION"}
           ]
         }
       ]
     };
-
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      final response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
 
@@ -137,7 +122,7 @@ class ChatCubit extends Cubit<ChatStates> {
             safeSearch['spoof'],
             safeSearch['medical'],
             safeSearch['violence'],
-            safeSearch['racy'],
+            safeSearch['racy']
           ];
 
           for (var likelihood in likelihoods) {
@@ -146,7 +131,6 @@ class ChatCubit extends Cubit<ChatStates> {
             }
           }
         }
-
         return true;
       } else {
         return false;

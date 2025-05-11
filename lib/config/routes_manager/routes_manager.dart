@@ -41,7 +41,7 @@ abstract class RoutesManager {
         builder: (context, state) => SignUpScreen(),
       ),
       GoRoute(
-        path: AppRoutes.splashRoute,
+       path: AppRoutes.splashRoute,
         builder: (context, state) => SplashScreen(),
       ),
       GoRoute(
