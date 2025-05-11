@@ -11,7 +11,7 @@ class HomeCubit extends Cubit<HomeStates> {
 
   UserModel? currentUser;
   List<String> chatIds = [];
-  Map<String, UserModel> chatPartners = {}; // الطرف التاني من كل شات
+  Map<String, UserModel> chatPartners = {};// الطرف التاني من كل شات
 
   Future<void> getCurrentUser() async {
     try {
@@ -49,6 +49,7 @@ class HomeCubit extends Cubit<HomeStates> {
     }
   }
 
+
   Future<void> getChatPartners() async {
     final uid = currentUser!.id;
     for (var chatId in chatIds) {
@@ -67,10 +68,8 @@ class HomeCubit extends Cubit<HomeStates> {
     List<String> parts = chatId.split('_');
     return parts.first == currentUserId ? parts.last : parts.first;
   }
+
+
 }
 
 // Create state class for loaded chats
-class HomeChatsLoadedState extends HomeStates {
-  final Map<String, UserModel> chatUsers;
-  HomeChatsLoadedState(this.chatUsers);
-}

@@ -42,17 +42,17 @@ class SettingsScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 40,
                       backgroundImage: NetworkImage(
-                          HomeCubit.get(context).currentUser!.profilePic), // Use your image here
+                          HomeCubit.get(context).currentUser?.profilePic??""), // Use your image here
                     ),
                     SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          HomeCubit.get(context).currentUser!.name ,
+                          HomeCubit.get(context).currentUser?.name??"" ,
                           style: quicksand18(color: AppColors.primary900),
                         ),
-                        Text(
+                          Text(
                           'Never give up 💪',
                           style: quicksand14(color: AppColors.primary900),
                         ),

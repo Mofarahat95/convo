@@ -24,13 +24,13 @@ class ChatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeStates>(
       builder: (context, state) {
-        final user = HomeCubit.get(context).currentUser!;
+        final user = HomeCubit.get(context).currentUser;
         return Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
             title: Text(
-              "Hi ${user.name.split(" ").first}",
+              "Hi ${user?.name.split(" ").first}",
               style: GoogleFonts.quicksand(color: Colors.white),
             ),
             centerTitle: true,
@@ -47,7 +47,7 @@ class ChatsScreen extends StatelessWidget {
                   },
                   child: CircleAvatar(
                     radius: 18,
-                    backgroundImage: NetworkImage(user.profilePic ?? ""),
+                    backgroundImage: NetworkImage(user?.profilePic ?? ""),
                   ),
                 ),
               ),
@@ -70,7 +70,7 @@ class ChatsScreen extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(user.profilePic),
+                                backgroundImage: NetworkImage(user?.profilePic??""),
                                 radius: 35,
                                 backgroundColor: Colors.white,
                               ),

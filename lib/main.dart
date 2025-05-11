@@ -1,5 +1,6 @@
 import 'package:convo/config/routes_manager/routes_manager.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_cubit.dart';
+import 'package:convo/features/chat/presentation/bloc/chat_cubit.dart';
 import 'package:convo/features/chatbot/gen/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,8 @@ void main() async {
           child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => LoginCubit()),
-          BlocProvider(create: (context) => HomeCubit()), // ✅ أضف ده
+          BlocProvider(create: (context) => HomeCubit()..getCurrentUser(),), // ✅ أضف ده
+          BlocProvider(create: (context) => ChatCubit(),)
         ],
         child:const Convo(),
       ))));

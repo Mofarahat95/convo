@@ -10,3 +10,7 @@ class HomeUserLoadedState extends HomeStates{
   UserModel userModel;
   HomeUserLoadedState(this.userModel);
 }
+class HomeChatsLoadedState extends HomeStates {
+  final Map<String, UserModel> chatUsers;
+  HomeChatsLoadedState(this.chatUsers);
+}

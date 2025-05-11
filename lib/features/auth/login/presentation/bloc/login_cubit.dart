@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convo/config/routes_manager/routes.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_states.dart';
-import 'package:convo/features/auth/signup/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
