@@ -46,25 +46,19 @@ class LoginCubit extends Cubit<LoginStates> {
     try {
       await GoogleSignIn().signOut();
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-
       if (gUser == null) {
         throw Exception("Sign-in aborted by user");
       }
-
       final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-
       if (userCredential.user != null) {
         GoRouter.of(context).pushReplacement(AppRoutes.homeRoute);
       }
-
       return userCredential;
     } catch (e) {
       print('Error during Google Sign-In: $e');

@@ -40,21 +40,24 @@ class SocialButtons extends StatelessWidget {
         ),
         const SizedBox(height: 30),
         Row(
-          spacing: 20,
+
           children: [
-            SizedBox(width: 90),
+            SizedBox(width: 80),
             SocialIcon(
               imagePath: ImageAssets.appleIcon,
               onTap: () {
                 GoRouter.of(context).push(AppRoutes.contactsScreen);
               },
             ),
+            SizedBox(width: 16),
             SocialIcon(
               imagePath: ImageAssets.facebookIcon,
               onTap: () {
                 LoginCubit.get(context).signInWithFacebook();
               },
             ),
+            SizedBox(width: 16),
+
             SocialIcon(
               imagePath: ImageAssets.googleIcon,
               onTap: () {
@@ -63,7 +66,7 @@ class SocialButtons extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 10),
       ],
     );
   }

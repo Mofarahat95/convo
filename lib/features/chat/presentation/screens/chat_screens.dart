@@ -58,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             IconButton(
               icon:
-              Image.asset('assets/images/Call.png', width: 30, height: 30),
+              Image.asset('assets/images/Calls.png', width: 30, height: 30),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ZimVoiceCall(

@@ -46,7 +46,8 @@ class CustomBarthDatePicker extends StatelessWidget {
                 Text(
                   'Birthday',
                   style: quicksand18(color: AppColors.primary950).copyWith(
-                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const Spacer(),

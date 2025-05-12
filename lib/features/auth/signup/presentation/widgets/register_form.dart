@@ -115,6 +115,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Text(AppStrings.register, style: quicksand18()),
               ),
             ),
+            SizedBox(height: 16),
           ],
         ),
       ),

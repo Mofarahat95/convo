@@ -27,12 +27,7 @@ class _ZegoVideoCallState extends State<ZegoVideoCall> {
       userName: "User: ${widget.userid}",
       callID: widget.callid,
       config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
-      // eventHandler: ZegoUIKitPrebuiltCallEventHandler(
-      //   onOnlySelfInRoom: () {
-      //     // الحدث ده هيشتغل لما المستخدم الآخر مش موجود
-      //     print("Waiting for ${widget.otherUserId} to join...");
-      //   },
-      //  ),
+
     );
   }
 }

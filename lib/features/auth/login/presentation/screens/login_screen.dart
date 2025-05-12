@@ -51,64 +51,68 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return Scaffold(
+            resizeToAvoidBottomInset: false, // ✅ أهم خطوة
             backgroundColor: AppColors.primary950,
             body: Column(
               children: [
-                SizedBox(
-                  height: 50,
-                ),
+                const SizedBox(height: 50),
                 buildLoginHeader(),
                 Expanded(
-                    child: Container(
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(30)),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const SizedBox(height: 4),
-                        buildTextField(
-                          controller: _emailController,
-                          label: 'Email',
-                          hintText: 'Enter your email',
-                          validationType: 'email',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                    ),
+                    child: SingleChildScrollView( // ✅ حل مشكلة overflow
+                      padding: const EdgeInsets.all(16),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 4),
+                            buildTextField(
+                              controller: _emailController,
+                              label: 'Email',
+                              hintText: 'Enter your email',
+                              validationType: 'email',
+                            ),
+                            const SizedBox(height: 10),
+                            buildTextField(
+                              controller: _passwordController,
+                              label: 'Password',
+                              obscureText: true,
+                              hintText: 'Enter your password',
+                              validationType: 'password',
+                            ),
+                            const SizedBox(height: 10),
+                            buildLoginOptions(context),
+                            const SizedBox(height: 10),
+                            buildLoginButton(
+                              context: context,
+                              onLogin: () {
+                                if (formKey.currentState!.validate()) {
+                                  LoginCubit.get(context).login(
+                                    _emailController.text,
+                                    _passwordController.text,
+                                  );
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            buildRegisterLink(context),
+                            const SizedBox(height: 10),
+                            SocialButtons(),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        buildTextField(
-                          controller: _passwordController,
-                          label: 'Password',
-                          obscureText: true,
-                          hintText: 'Enter your password',
-                          validationType: 'password',
-                        ),
-                        buildLoginOptions(context),
-                        buildLoginButton(
-                          context: context,
-                          onLogin: () {
-                            if (formKey.currentState!.validate()) {
-                              LoginCubit.get(context).login(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                        buildRegisterLink(context),
-                        const SizedBox(height: 10),
-                        SocialButtons(),
-                        const SizedBox(height: 20),
-                      ],
+                      ),
                     ),
                   ),
-                )),
+                ),
               ],
             ),
           );
+
         },
       ),
     );
