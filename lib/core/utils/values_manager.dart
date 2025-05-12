@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class AppMargin {
   static const double m5 = 5.0;
   static const double m8 = 8.0;
@@ -44,4 +46,37 @@ abstract class AppSize {
   static const double s30 = 30.0;
   static const double s34 = 34.0;
   static const double s38 = 38.0;
+}
+extension vaidate on String{
+  bool isValidEmail(String email) {
+    return RegExp(
+        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))'
+        r'@((\[[0-9]{1,3}\.[0-9]{1,3}\'
+        r'.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    return password.length >= 8 &&
+        RegExp(r'[A-Z]').hasMatch(password) &&
+        RegExp(r'[a-z]').hasMatch(password) &&
+        RegExp(r'[0-9]').hasMatch(password) &&
+        RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(password);
+  }
+
+  bool isPasswordMatch(String password, String confirmPassword) {
+    return password == confirmPassword;
+  }
+  bool isValidName(String name) {
+    return name.isNotEmpty && name.length > 2;
+  }
+
+  bool isValidPhone(String phone) {
+    return RegExp(r'^01[0-9]\d{8}$').hasMatch(phone);
+  }
+}
+extension MediaQueryValues on BuildContext {
+  double get screenWidth => MediaQuery.of(this).size.width;
+  double get screenHeight => MediaQuery.of(this).size.height;
+  double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
 }
