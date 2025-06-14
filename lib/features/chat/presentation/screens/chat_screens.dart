@@ -202,6 +202,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 onPressed: () {
                   // المكالمة الصوتية
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ZimVoiceCall(
+                      callid: "1",
+                      userid: currentUser.id,
+                      otherUserId: otherUser.id,
+                    ),
+                  ));
                 },
               ),
               IconButton(
@@ -213,6 +220,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 onPressed: () {
                   // مكالمة الفيديو
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ZegoVideoCall(
+                      callid: "1",
+                      userid: currentUser.id,
+                      otherUserId: otherUser.id,
+                    ),
+                  ));
                 },
               ),
             ],
