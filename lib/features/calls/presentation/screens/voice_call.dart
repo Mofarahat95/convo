@@ -16,7 +16,7 @@ class ZimVoiceCall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ZegoUIKitPrebuiltCall(
-      appID: 901987774, // استبدل بـ App ID الحقيقي
+      appID: 901987774,
       appSign: "b051b344bdad778fdf5b1aedf650c3b0c41cdb18c288d118be19740b24b73891", // استبدل بـ App Sign الحقيقي
       userID: userid,
       userName: "User: $userid",

@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: AppColors.primary950,
             body: Column(
               children: [
