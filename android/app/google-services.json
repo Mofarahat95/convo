@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1025056151848",
+    "project_id": "convo-2b935",
+    "storage_bucket": "convo-2b935.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025056151848:android:6a4b8b4ece6e4749d5981d",
+        "android_client_info": {
+          "package_name": "com.example.convo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARBMhWAJWPHMxvFHZmqt_O-t4MO7Uu4Bc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

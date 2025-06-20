@@ -1,0 +1,2 @@
+D:/Level 4/convoa7777/android/app/.cxx/Debug/3k4y6ea2/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Level 4/convoa7777/android/app/.cxx/Debug/3k4y6ea2/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,2 @@
+D:/Level 4/convoa7777/android/app/.cxx/Debug/6f2c1637/x86/CMakeFiles/edit_cache.dir
+D:/Level 4/convoa7777/android/app/.cxx/Debug/6f2c1637/x86/CMakeFiles/rebuild_cache.dir
