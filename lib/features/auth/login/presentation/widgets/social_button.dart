@@ -42,7 +42,7 @@ class SocialButtons extends StatelessWidget {
         Row(
           spacing: 20,
           children: [
-            SizedBox(width: 50),
+            SizedBox(width: 75),
             SocialIcon(
               imagePath: ImageAssets.appleIcon,
               onTap: () {
@@ -63,7 +63,8 @@ class SocialButtons extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 0),
+        const SizedBox(height: 0),
       ],
     );
   }

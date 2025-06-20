@@ -53,7 +53,7 @@ class CallHistory extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 300),
+                  padding: const EdgeInsets.only(right: 280),
                   child: Text(
                     "Recent",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

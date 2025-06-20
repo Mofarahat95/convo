@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convo/config/routes_manager/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -150,12 +151,17 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(otherUser.name ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const Text("Active now", style: TextStyle(color: Colors.grey, fontSize: 12)),
-                ],
+              child: InkWell(
+                onTap: (){
+                  GoRouter.of(context).push(AppRoutes.profileRoute,extra: otherUser);
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(otherUser.name ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const Text("Active now", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  ],
+                ),
               ),
             ),
             IconButton(

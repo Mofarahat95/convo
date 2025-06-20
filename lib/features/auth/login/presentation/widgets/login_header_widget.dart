@@ -28,7 +28,7 @@ Widget buildLoginHeader() {
               ],
             ),
             const Spacer(),
-            _buildLanguageDropdown(),
+            //_buildLanguageDropdown(),
           ],
         ),
         const SizedBox(height: 50),
@@ -42,7 +42,7 @@ Widget buildLoginHeader() {
   );
 }
 
-Widget _buildLanguageDropdown() {
+/*Widget _buildLanguageDropdown() {
   return DropdownButtonHideUnderline(
     child: DropdownButton<String>(
       value: "ar",
@@ -74,4 +74,4 @@ Widget _buildLanguageDropdown() {
       onChanged: (value) {},
     ),
   );
-}
+}*/

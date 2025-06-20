@@ -23,39 +23,36 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: tabs[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedIndex,
         onTap: (index) {
-          selectedIndex = index;
-          setState(() {});
+          setState(() {
+            selectedIndex = index;
+          });
         },
         iconSize: 30,
         backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
         selectedItemColor: Color(0xff24786D),
         unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
+        selectedLabelStyle: const TextStyle(color: Color(0xff24786D)),
+        unselectedLabelStyle: const TextStyle(color: Colors.grey),
         items: [
           BottomNavigationBarItem(
             icon: Image.asset('assets/images/Message.png', width: 30),
             label: "Message",
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/images/Calls.png',
-              width: 30,
-            ),
+            icon: Image.asset('assets/images/Calls.png', width: 30),
             label: "Calls",
           ),
           BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/images/Contacts.png',
-                width: 30,
-              ),
-              label: "Contacts"),
+            icon: Image.asset('assets/images/Contacts.png', width: 30),
+            label: "Contacts",
+          ),
           BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/images/settings.png',
-                width: 30,
-              ),
-              label: "Settings"),
+            icon: Image.asset('assets/images/settings.png', width: 30),
+            label: "Settings",
+          ),
         ],
       ),
     );

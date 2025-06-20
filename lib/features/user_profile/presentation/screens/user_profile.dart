@@ -47,7 +47,7 @@ class UserProfileScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: Image.asset('assets/images/Message.png'),
+                        icon: Image.asset('assets/images/micon.png'),
                         // ضع صورة الايقونة
                         onPressed: () {},
                       ),
@@ -75,14 +75,14 @@ class UserProfileScreen extends StatelessWidget {
                         width: 20,
                       ),
                       IconButton(
-                        icon: Image.asset('assets/images/Calls.png'),
+                        icon: Image.asset('assets/images/cicon.png'),
                         // ضع صورة الايقونة
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ZimVoiceCall(
                                 callid:
-                                    "123456", // يجب تحديثها بناءً على الحالة
+                                    "1", // يجب تحديثها بناءً على الحالة
                                 userid:
                                     "123", // يجب تحديثها بناءً على المستخدم الحالي
                                 otherUserId:
@@ -148,7 +148,7 @@ class UserProfileScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Image.asset('assets/images/kero.png',
+                      Image.network(user.profilePic,
                           width: 103, height: 80),
                       SizedBox(width: 10),
                       Image.asset('assets/images/facebook.png',
