@@ -248,12 +248,12 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(displayedText.isEmpty ? 'رسالة فارغة' : displayedText),
+            Text(displayedText.isEmpty ? 'رسالة فارغة' : displayedText,style: TextStyle(fontWeight: FontWeight.bold),),
             const SizedBox(height: 4),
             if (timestamp != null)
               Text(
                 timestamp.toDate().toString().substring(11, 16),
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: const TextStyle(color: Colors.black, fontSize: 12),
               ),
           ],
         ),
@@ -358,7 +358,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           IconButton(
-            icon: Icon(_isRecording ? Icons.stop : Icons.mic, color: _isRecording ? Colors.red : Colors.blue),
+            icon: Icon(_isRecording ? Icons.stop : Icons.mic, color: _isRecording ? Colors.red : Colors.green),
             onPressed: () async {
               if (_isRecording) {
                 await _stopRecording();

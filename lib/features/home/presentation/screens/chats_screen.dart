@@ -125,7 +125,7 @@ class ChatsScreen extends StatelessWidget {
                                   children: [
                                     SlidableAction(
                                       onPressed: (_) {
-                                        // هنا ممكن تضيف كود حذف الشات من Firestore
+                                        HomeCubit.get(context).removeChat(chatId);
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(content: Text('Deleted ${partner.name}')),
                                         );
