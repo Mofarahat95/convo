@@ -12,6 +12,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../../config/routes_manager/routes.dart';
 import '../../../story/story_list.dart';
 import '../../../story/uploadStory.dart';
+import '../../../chat/presentation/bloc/chat_cubit.dart';
 
 class ChatsScreen extends StatelessWidget {
   ChatsScreen({super.key});
@@ -24,7 +25,6 @@ class ChatsScreen extends StatelessWidget {
         final user = homeCubit.currentUser;
         final chatPartners = homeCubit.chatPartners;
         final chatIds = homeCubit.chatIds;
-        final lastMessages = homeCubit.lastMessages;
 
         return Scaffold(
           backgroundColor: Colors.black,
@@ -93,101 +93,79 @@ class ChatsScreen extends StatelessWidget {
 
                           if (chatId.isEmpty) return const SizedBox();
 
-                          final lastMessage = lastMessages[chatId] ?? "No messages yet";
+                          return FutureBuilder<QuerySnapshot>(
+                            future: FirebaseFirestore.instance
+                                .collection('chats')
+                                .doc(chatId)
+                                .collection('messages')
+                                .orderBy('timestamp', descending: true)
+                                .limit(1)
+                                .get(),
+                            builder: (context, snapshot) {
+                              String lastMessage = "No messages yet";
+                              if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                                final data = snapshot.data!.docs.first.data() as Map<String, dynamic>;
+                                final rawText = data['message'] ?? "";
+                                final isVoice = data['isVoice'] == true;
+                                final isImage = rawText.toString().startsWith('https://');
 
-                          return Slidable(
-                            key: ValueKey(partner.id),
-                            endActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  onPressed: (_) async {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext dialogContext) {
-                                        return AlertDialog(
-                                          title: const Text("Delete Chat"),
-                                          content: Text("Are you sure you want to delete the chat with ${partner.name}?"),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.of(dialogContext).pop(),
-                                              child: const Text("No"),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                Navigator.of(dialogContext).pop();
-                                                try {
-                                                  final messagesRef = FirebaseFirestore.instance
-                                                      .collection('chats')
-                                                      .doc(chatId)
-                                                      .collection('messages');
+                                if (isVoice) {
+                                  lastMessage = "🎤 Voice";
+                                } else if (isImage) {
+                                  lastMessage = "📷 Image";
+                                } else {
+                                  lastMessage = ChatCubit.get(context).decryptMessage(rawText);
+                                }
+                              }
 
-                                                  final messages = await messagesRef.get();
-                                                  for (var doc in messages.docs) {
-                                                    await doc.reference.delete();
-                                                  }
-
-                                                  await FirebaseFirestore.instance
-                                                      .collection('chats')
-                                                      .doc(chatId)
-                                                      .delete();
-
-                                                  homeCubit.removeChat(chatId);
-
-                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                    SnackBar(content: Text('Chat deleted with ${partner.name}')),
-                                                  );
-                                                } catch (e) {
-                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                    SnackBar(content: Text('Error deleting chat: $e')),
-                                                  );
-                                                }
-                                              },
-                                              child: const Text("Yes", style: TextStyle(color: Colors.red)),
-                                            ),
-                                          ],
+                              return Slidable(
+                                key: ValueKey(partner.id),
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (_) {
+                                        // هنا ممكن تضيف كود حذف الشات من Firestore
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Deleted ${partner.name}')),
                                         );
                                       },
-                                    );
-                                  },
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.delete,
-                                  label: 'Delete',
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'Delete',
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: ListTile(
-                              onTap: () async {
-                                await GoRouter.of(context).push(AppRoutes.chatRoute, extra: partner);
-                                await homeCubit.getUserChats();
-                              },
-                              leading: CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage(partner.profilePic),
-                              ),
-                              title: Text(
-                                partner.name,
-                                style: const TextStyle(
-                                  color: Color(0xff000E08),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                child: ListTile(
+                                  onTap: () => GoRouter.of(context).push(AppRoutes.chatRoute, extra: partner),
+                                  leading: CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: NetworkImage(partner.profilePic),
+                                  ),
+                                  title: Text(
+                                    partner.name,
+                                    style: const TextStyle(
+                                      color: Color(0xff000E08),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    lastMessage,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  trailing: const Text(
+                                    "1 min ago",
+                                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                                  ),
                                 ),
-                              ),
-                              subtitle: Text(
-                                lastMessage,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              trailing: const Text(
-                                "1 min ago",
-                                style: TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                            ),
+                              );
+                            },
                           );
                         },
-
                       ),
                     ),
                     Positioned(
