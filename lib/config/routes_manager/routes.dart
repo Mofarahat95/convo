@@ -15,4 +15,6 @@ abstract class AppRoutes {
   static const String profileRoute = '/profile';
   static const String workSpaceRoute = '/workSpace';
   static const String insidechatRoute = '/insidechat';
+  static const String currentUserRoute = '/currentUser';
+
 }
