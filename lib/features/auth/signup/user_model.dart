@@ -9,10 +9,10 @@ class UserModel {
   UserModel(
       {required this.email,
       required this.id,
-      required this.name,
-      required this.phone,
-      required this.birthday,
-      required this.profilePic // Added birthday parameter
+        required this.name,
+        required this.phone,
+        required this.birthday,
+        required this.profilePic // Added birthday parameter
       });
 
   UserModel.fromJson(Map<String, dynamic> json)
@@ -23,7 +23,7 @@ class UserModel {
           phone: json['phonenumber'] ?? '',
           birthday: json['birthday'] ?? 0,
           profilePic: json[
-              'profilePic'], // Added birthday from JSON with default empty string
+              'profilePic'],
         );
 
   Map<String, dynamic> toJson() {

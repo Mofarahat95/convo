@@ -1,5 +1,4 @@
 import 'package:convo/config/routes_manager/routes.dart';
-import 'package:convo/core/utils/assets_manager.dart';
 import 'package:convo/core/utils/colors_manager.dart';
 import 'package:convo/core/utils/styles_manager.dart';
 import 'package:convo/features/auth/login/presentation/bloc/login_cubit.dart';
@@ -37,34 +36,39 @@ class SettingsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 20),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(
-                          HomeCubit.get(context).currentUser?.profilePic??""), // Use your image here
-                    ),
-                    SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          HomeCubit.get(context).currentUser?.name??"" ,
-                          style: quicksand18(color: AppColors.primary900),
-                        ),
+                InkWell(
+                  onTap: (){
+                    GoRouter.of(context).push(AppRoutes.currentUserRoute);
+                  },
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(
+                            HomeCubit.get(context).currentUser?.profilePic??""), // Use your image here
+                      ),
+                      SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                          'Never give up 💪',
-                          style: quicksand14(color: AppColors.primary900),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.qr_code,
-                      color: AppColors.primary900,
-                      size: 30,
-                    ),
-                  ],
+                            HomeCubit.get(context).currentUser?.name??"" ,
+                            style: quicksand18(color: AppColors.primary900),
+                          ),
+                            Text(
+                            'Never give up 💪',
+                            style: quicksand14(color: AppColors.primary900),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(
+                        Icons.qr_code,
+                        color: AppColors.primary900,
+                        size: 30,
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 16),
                 Divider(color: AppColors.primary200),

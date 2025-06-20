@@ -26,13 +26,12 @@ class HomeCubit extends Cubit<HomeStates> {
       if (doc.exists) {
         currentUser = UserModel.fromJson(doc.data()!..addAll({'id': user.uid}));
         emit(HomeUserLoadedState(currentUser!));
-
         await getUserChats();
       } else {
         throw Exception("User document does not exist.");
       }
     } catch (e) {
-      print("❌ Error: $e");
+      print("\u274C Error: $e");
       emit(HomeUserErrorState(e.toString()));
     }
   }
@@ -40,8 +39,7 @@ class HomeCubit extends Cubit<HomeStates> {
   Future<void> getUserChats() async {
     try {
       final uid = currentUser!.id;
-      final snapshot =
-      await FirebaseFirestore.instance.collection('chats').get();
+      final snapshot = await FirebaseFirestore.instance.collection('chats').get();
 
       chatIds.clear();
 
@@ -57,7 +55,7 @@ class HomeCubit extends Cubit<HomeStates> {
 
       await getChatPartners();
     } catch (e) {
-      print("❌ Failed to fetch chat IDs: $e");
+      print("\u274C Failed to fetch chat IDs: $e");
     }
   }
 

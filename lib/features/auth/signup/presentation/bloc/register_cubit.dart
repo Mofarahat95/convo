@@ -41,18 +41,12 @@ class RegisterCubit extends Cubit<RegisterStates> {
   }
 
   CollectionReference<UserModel> getUserCollection() {
-    return FirebaseFirestore.instance
-        .collection("Users")
-        .withConverter<UserModel>(
-      fromFirestore: (snapshot, _) {
+    return FirebaseFirestore.instance.collection("Users")
+        .withConverter<UserModel>(fromFirestore: (snapshot, _) {
         return UserModel.fromJson(snapshot.data()!);
       },
       toFirestore: (user, _) {
-        return user.toJson();
-      },
-    );
-  }
-
+        return user.toJson();},);}
   Future<void> addUserToFireStore(UserModel user) async {
     var collection = getUserCollection();
     var docRef = collection.doc(user.id);
